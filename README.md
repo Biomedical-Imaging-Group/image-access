@@ -1,6 +1,4 @@
 # IPLabImageAccess
-
-# Description
 The `IPLabImageAccess` class provides an interface to multidimensional arrays in JavaScript which represent graylevel or colour images. It provides utility functions and easy pixel access. For this documentation it is assumed, for simplicity and readability, that the `IPLabImageAccess` will be imported as 
 ```javascript 
 const Image = require('IPLabImageAccess.js')
