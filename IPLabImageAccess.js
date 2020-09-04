@@ -1,17 +1,22 @@
 class IPLabImageAccess{
     // initializes a new blank image
     constructor(height, width = {}, {rgb=false, init_value=0} = {}){
+		// check usage
         if(typeof(height) == 'undefined'){
+			// if called without arguments, return without initializing the image
             return;
+		// check if height an width are given separately
         }else if(IPLabImageAccess.ndims(height) == 0){
-            // use height and width seperately
             if(!rgb){
+				// if rgb is false, initialize graylevel image
                 this.image = IPLabImageAccess.MultidimArray(init_value, height, width);
             }else{
+				// if rgb is true, initialize color image
                 this.image = IPLabImageAccess.MultidimArray(init_value, height, width, 3);
             }
+		// check if height an width are given as an array
         }else if(IPLabImageAccess.ndims(height) == 1 && (height.length == 2 || height.length == 3)){
-			// redefine optional parameters
+			// in this case, the optional parameters are stored in width
 			rgb = width.rgb || false;
 			init_value = width.init_value || 0;
             // height and width given as a an array
@@ -20,6 +25,7 @@ class IPLabImageAccess{
             }else{
                 this.image = IPLabImageAccess.MultidimArray(init_value, height[0], height[1]);
             }
+		// check if the image is given as an array
         }else if(IPLabImageAccess.ndims(height) == 2 || IPLabImageAccess.ndims(height) == 3){
             // initialize from array
             this.fromArray(height);
@@ -107,12 +113,6 @@ class IPLabImageAccess{
 
     // Creates a new 1D/2D/3D array and initializes it to init_value
     static MultidimArray(init_value, height, width, depth){
-        /*
-        Usage: 
-        1d_array = MultidimArray(init_value, height);
-        2d_array = MultidimArray(init_value, height, width);
-        3d_array = MultidimArray(init_value, height, width, depth);
-        */
 		// initialize the output array with the first dimension
         var output = new Array(height);
 		// for every element of the first dimension, add the other dimensions
@@ -144,22 +144,6 @@ class IPLabImageAccess{
 
     // returns the neighbourhood of an array
     static getNbh(img, x_pos, y_pos, nx, ny, padding = 'mirror'){
-        /*
-        Returns a neighbourhood neigh[][] of shape (nx,ny) around the pixel (x_pos, y_pos) in img
-
-        For example if (nx, ny) = (4, 4):
-        The pixel value of (x-1, y-1) is put into neigh[0][0]
-        The pixel value of (x , y ) is put into neigh[1][1]
-        The pixel value of (x, y+1) is put into neigh[1][2]
-        The pixel value of (x+1, y-1) is put into neigh[2][0]
-        ...
-        For example if (nx, ny) = (5, 5)::
-        The pixel value of (x-2, y-2) is put into neigh[0][0]
-        The pixel value of (x-1, y-1) is put into neigh[1][1]
-        The pixel value of (x , y ) is put into neigh[2][2]
-        The pixel value of (x, y+1) is put into neigh[2][3]
-        The pixel value of (x+2, y-2) is put into neigh[4][0]
-        */
 		// initialize variables
         var count = 0;
         var shap = IPLabImageAccess.shape(img);
@@ -174,59 +158,17 @@ class IPLabImageAccess{
                 // calculate x and y position offset
                 var y_offset = y_pos - Math.floor(ny/2) + y;
                 var x_offset = x_pos - Math.floor(nx/2) + x;
-                // padding
-                if(y_offset < 0){
-					// apply zero padding
-                    if(padding == 'zero'){
-                        neigh[y][x] = (rgb ? [0, 0, 0] : 0);
-                        continue;
-                    }else if(padding == 'repeat'){
-                        // apply repeated folding
-                        y_offset = shap[0] - (Math.abs(y_offset) % shap[0]);
-                    }else{
-                        // apply mirror folding
-                        y_offset = -y_offset - 1;
-                    }
-                }if(y_offset >= shap[0]){
-					// apply zero padding
-                    if(padding == 'zero'){
-                        neigh[y][x] = (rgb ? [0, 0, 0] : 0);
-                        continue;
-                    }else if(padding == 'repeat'){
-                        // apply repeated folding
-                        y_offset = y_offset % shap[0];
-                    }else{
-                        // apply mirror folding
-                        y_offset = shap[0] - 1 - (y_offset % shap[0]);
-                    }
-                }
-                if(x_offset < 0){
-                    if(padding == 'zero'){
-						// apply zero padding
-                        neigh[y][x] = (rgb ? [0, 0, 0] : 0);
-                        continue;
-                    }else if(padding == 'repeat'){
-                        // apply repeated folding
-                        x_offset = shap[1] - (Math.abs(x_offset) % shap[1]);
-                    }else{
-                        // apply mirror folding
-                        x_offset = -x_offset - 1;
-                    }
-                }if(x_offset >= shap[1]){
-                    if(padding == 'zero'){
-						// apply zero padding
-                        neigh[y][x] = (rgb ? [0, 0, 0] : 0);
-                        continue;
-                    }else if(padding == 'repeat'){
-                        // apply repeated folding
-                        x_offset = x_offset % shap[1];
-                    }else{
-                        // apply mirror folding
-                        x_offset = shap[1] - 1 - (x_offset % shap[1]);
-                    }
-                }
+				// apply boundary condition to indexes
+                [x_offset, y_offset] = IPLabImageAccess.applyBoundaryCondition(x_offset, y_offset, shap=shap, padding=padding)
 				// assign pixel to the neighbourhood
-                neigh[y][x] = img[y_offset][x_offset];
+				if(x_offset == -1 || y_offset == -1){
+					// zero padding 
+					neigh[y][x] = rgb ? [0, 0, 0] : 0;
+				}else{
+					// other padding
+					neigh[y][x] = img[y_offset][x_offset];
+				}
+                
             }
         }
         return neigh;
@@ -329,65 +271,15 @@ class IPLabImageAccess{
         if(IPLabImageAccess.ndims(this.image) == 3){
             rgb = true;
         }
-        // padding
-        if(y < 0){
-            out_of_bounds = true;
-            if(padding == 'zero'){
-            }else if(padding == 'repeat'){
-                // apply repeated folding
-                y = this.ny - (Math.abs(y) % this.ny);
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                y = -y;
-            }
-        }if(y >= this.ny){
-            out_of_bounds = true;
-            if(padding == 'zero'){
-            }else if(padding == 'repeat'){
-                // apply repeated folding
-                y = y % this.ny;
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                y = this.ny - 1 - (y % this.ny);
-            }
-        }
-        if(x < 0){
-            out_of_bounds = true;
-            if(padding == 'zero'){
-            }else if(padding == 'repeat'){
-                // apply repeated folding
-                x = this.nx - (Math.abs(x) % this.nx);
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                x = -x;
-            }
-        }if(x >= this.nx){
-            out_of_bounds = true;
-            if(padding == 'zero'){
-            }else if(padding == 'repeat'){
-                // apply repeated folding
-                x = x % this.nx;
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                x = this.nx - 1 - (x % this.nx);
-            }
-        }
-        if(out_of_bounds){
-            // provide a warning if an out-of-bounds pixel was accessed in case this was not intentional
-            //console.warn("Pixel (" + x_orig.toString() + "," + y_orig.toString() + ") is out of bounds: " + padding + "-padding was applied.");
-            if(padding == 'zero'){
-                return rgb ? [0, 0, 0] : 0;
-            }
-        }
-        return this.image[y][x];
+        // apply boundary conditions
+		[x, y] = IPLabImageAccess.applyBoundaryCondition(x, y, this.shape(), padding=padding);
+        if(x == -1 || y == -1){
+			// zero padding
+			return rgb ? [0, 0, 0] : 0;
+		}else{
+			// other padding
+			return this.image[y][x];
+		}
     }
     
     // sets the pixel value at location (x,y)
@@ -402,6 +294,10 @@ class IPLabImageAccess{
             // otherwise provide a warning but still set the pixel
             console.warn("Writing grayscale value to an rgb image converts this pixel to grayscale.")
         }
+		// check for paddings
+		if(padding != 'mirror' && padding != 'repeat'){
+			throw new Error('setPixel does not support ' + padding + '-padding! Use mirror or repeat.');
+		}
         // store original coordinate for message display
         var x_orig = x;
         var y_orig = y;
@@ -414,57 +310,8 @@ class IPLabImageAccess{
         if(this.ndims() == 3){
             rgb = true;
         }
-        // padding
-        if(y < 0){
-            out_of_bounds = true;
-            if(padding == 'repeat'){
-                // apply repeated folding
-                y = this.ny - (Math.abs(y) % this.ny);
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                y = -y;
-            }
-        }if(y >= this.ny){
-            out_of_bounds = true;
-            if(padding == 'repeat'){
-                // apply repeated folding
-                y = y % this.ny;
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                y = this.ny - 1 - (y % this.ny);
-            }
-        }
-        if(x < 0){
-            out_of_bounds = true;
-            if(padding == 'repeat'){
-                // apply repeated folding
-                x = this.nx - (Math.abs(x) % this.nx);
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                x = -x;
-            }
-        }if(x >= this.nx){
-            out_of_bounds = true;
-            if(padding == 'repeat'){
-                // apply repeated folding
-                x = x % this.nx;
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                x = this.nx - 1 - (x % this.nx);
-            }
-        }
-        if(out_of_bounds){
-            // provide a warning if an out-of-bounds pixel was accessed in case this was not intentional
-            //console.warn("Pixel (" + x_orig.toString() + "," + y_orig.toString() + ") is out of bounds: " + padding + "-padding was applied.");
-        }
+        // apply boundary conditions
+        [x,y] = IPLabImageAccess.applyBoundaryCondition(x, y, shap, padding=padding)
         this.image[y][x] = value;
     }
     
@@ -478,38 +325,13 @@ class IPLabImageAccess{
             rgb = true;
         }
         // padding
-        if(y < 0) {
-            out_of_bounds = true
-            if(padding == 'zero'){
-            }else if(padding == 'repeat'){
-                // apply repeated folding
-                y = this.ny - (Math.abs(y) % this.ny);
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                y = -y;
-            }
-        }if(y >= this.ny){
-            out_of_bounds = true;
-            if(padding == 'zero'){
-            }else if(padding == 'repeat'){
-                // apply repeated folding
-                y = y % this.ny;
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                y = this.ny - 1 - (y % this.ny);
-            }
-        }
-        if(out_of_bounds){
-            if(padding == 'zero'){     
-				// if zero padding should be applied, return a row of zeros
-                return rgb ? [Array(this.nx).fill(0), Array(this.nx).fill(0), Array(this.nx).fill(0)] : new Array(this.nx).fill(0);
-            }
-        }
-        return this.image[y];
+        y = IPLabImageAccess.applyBoundaryCondition(0, y, this.shape(), padding=padding)[1]
+        if(y == -1){
+			// if zero padding should be applied, return a row of zeros
+			return rgb ? [Array(this.nx).fill(0), Array(this.nx).fill(0), Array(this.nx).fill(0)] : new Array(this.nx).fill(0);
+        }else{
+			return this.image[y];
+		}
     }
     
     getColumn(x, padding = 'mirror'){
@@ -520,53 +342,35 @@ class IPLabImageAccess{
             rgb = true;
         }
         // padding
-        if(x < 0) {
-            out_of_bounds = true
-            if(padding == 'zero'){
-            }else if(padding == 'repeat'){
-                // apply repeated folding
-                x = this.nx - (Math.abs(x) % this.nx);
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                x = -x;
-            }
-        }if(x >= this.nx){
-            out_of_bounds = true;
-            if(padding == 'zero'){
-            }else if(padding == 'repeat'){
-                // apply repeated folding
-                x = x % this.nx;
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                x = this.nx - 1 - (x % this.nx);
-            }
-        }
-        if(out_of_bounds){
-            if(padding == 'zero'){
-				// if zero padding should be applied, return a column of zeros
-                return rgb ? [Array(this.ny).fill(0), Array(this.ny).fill(0), Array(this.ny).fill(0)] : new Array(this.ny).fill(0);
-            }
-        }
-		// use transposed image to extract a column
-        var image = IPLabImageAccess.transpose(this.image);
-        return image[x]
+        x = IPLabImageAccess.applyBoundaryCondition(x, 0, this.shape(), padding=padding)[0]
+        if(x == -1){
+			// if zero padding should be applied, return a column of zeros
+			return rgb ? [Array(this.ny).fill(0), Array(this.ny).fill(0), Array(this.ny).fill(0)] : new Array(this.ny).fill(0);
+        }else{
+			// extract column
+			return this.image.map(function(element) {return element[x];});
+		}
     }
     
-    putRow(y, new_row){
+    putRow(y, new_row, padding='mirror'){
+		// check if a row has been provided
+		if(typeof(new_row.length) == 'undefined' || new_row.length != this.nx){
+			throw new Error('putRow: The provided row has length ' + new_row.length + ' but the image has width ' + this.nx);
+		}
         // check if the correct type of pixel is provided (colour / gray)
-        if(this.ndims() == 2 && typeof(y.length) == 3 || typeof(y.length) != 'undefined'){
+        if(this.ndims() == 2 && Image.ndims(new_row) == 2 && Image.shape(new_row)[1] == 3){
             // otherwise provide a warning but still set the pixel
             console.warn("Writing an rgb value to a grayscale image converts this pixel to rgb.")
         }
         // check if the correct type of pixel is provided (colour / gray)
-        if(this.ndims() == 3 && value.length != 3){
+        if(this.ndims() == 3 && Image.ndims(new_row) == 1){
             // otherwise provide a warning but still set the pixel
             console.warn("Writing grayscale value to an rgb image converts this pixel to grayscale.")
         }
+		// check for paddings
+		if(padding != 'mirror' && padding != 'repeat'){
+			throw new Error('putRow does not support ' + padding + '-padding! Use mirror or repeat.');
+		}
         // variable to check if an out of bounds pixel has been accessed
         var out_of_bounds = false;
         var rgb = false;
@@ -575,41 +379,23 @@ class IPLabImageAccess{
             rgb = true;
         }
         // padding
-        if(y < 0){
-            out_of_bounds = true;
-            if(padding == 'repeat'){
-                // apply repeated folding
-                y = this.ny - (Math.abs(y) % this.ny);
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                y = -y;
-            }
-        }if(y >= this.ny){
-            out_of_bounds = true;
-            if(padding == 'repeat'){
-                // apply repeated folding
-                y = y % this.ny;
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                y = this.ny - 1 - (y % this.ny);
-            }
-        }
+        y = IPLabImageAccess.applyBoundaryCondition(0, y, this.shape(), padding=padding)[1]
         this.image[y] = new_row;
     }
     
     
-    putColumn(x, new_column){
+    putColumn(x, new_column, padding='mirror'){
+        // check if a row has been provided
+		if(typeof(new_column.length) == 'undefined' || new_column.length != this.ny){
+			throw new Error('putRow: The provided column has length ' + new_column.length + ' but the image has height ' + this.ny);
+		}
         // check if the correct type of pixel is provided (colour / gray)
-        if(this.ndims() == 2 && typeof(x.length) == 3 || typeof(x.length) != 'undefined'){
+        if(this.ndims() == 2 && Image.ndims(new_column) == 2 && Image.shape(new_column)[1] == 3){
             // otherwise provide a warning but still set the pixel
             console.warn("Writing an rgb value to a grayscale image converts this pixel to rgb.")
         }
         // check if the correct type of pixel is provided (colour / gray)
-        if(this.ndims() == 3 && value.length != 3){
+        if(this.ndims() == 3 && Image.ndims(new_column) == 1){
             // otherwise provide a warning but still set the pixel
             console.warn("Writing grayscale value to an rgb image converts this pixel to grayscale.")
         }
@@ -621,35 +407,12 @@ class IPLabImageAccess{
             rgb = true;
         }
         // padding
-        if(x < 0){
-            out_of_bounds = true;
-            if(padding == 'repeat'){
-                // apply repeated folding
-                x = this.nx - (Math.abs(x) % this.nx);
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                x = -x;
-            }
-        }if(x >= this.nx){
-            out_of_bounds = true;
-            if(padding == 'repeat'){
-                // apply repeated folding
-                x = x % this.nx;
-            }else{
-                // defaults to mirror-padding
-                padding = 'mirror';
-                // apply mirror folding
-                x = this.nx - 1 - (x % this.ny);
-            }
-        }
-		// use transpose of image to put a new column
-        var image = IPLabImageAccess.transpose(this.image);
-        image[x] = new_column;
-		// re-transpose to get original image
-        image = IPLabImageAccess.transpose(image);
-        this.image = image;
+        x = IPLabImageAccess.applyBoundaryCondition(x, 0, this.shape(), padding=padding)[0]
+		
+		// put new column
+		for(var y=0; y < this.ny; y++){
+			this.image[y][x] = new_column[y]
+		}
     }
     
 	// returns the transpose of an array
@@ -673,7 +436,7 @@ class IPLabImageAccess{
 		for(var i in a1) {
 		 // Don't forget to check for arrays in our arrays.
 			if(a1[i] instanceof Array && a2[i] instanceof Array) {
-				if(!IPLabImageAccess.arrayCompare(a1[i], a2[i])) {
+				if(!IPLabImageAccess.arrayCompare(a1[i], a2[i], tol = tol)) {
 					return false;
 				}
 			}
@@ -688,7 +451,7 @@ class IPLabImageAccess{
     // compares the image with another image
     imageCompare(newImage, tol=1e-5){
 		// apply arrayCompare to the two images
-        return IPLabImageAccess.arrayCompare(newImage.image, this.image, tol);
+        return IPLabImageAccess.arrayCompare(newImage.image, this.image, tol = tol);
     }
     
 	// returns the elements of the image that are under the structuring element b in ascending order
@@ -749,7 +512,7 @@ class IPLabImageAccess{
     putSubImage(x, y, img){
 		// check if the sub-image location is inside the image
         if(x < 0 || y < 0 || x+img.nx > this.nx || x+img.ny > this.ny){
-           throw new Error("Subimgae out of bounds");
+           throw new Error("Subimage out of bounds");
         }
         // loop through every pixel of the sub-image
         for(var k = x; k < x+img.nx; k++){
@@ -760,6 +523,58 @@ class IPLabImageAccess{
             }
         }                
     }
+	
+	// adjusts the index depending on the boundary conditions
+	static applyBoundaryCondition(x, y, shap, padding='mirror'){
+		// padding
+		if(y < 0){
+			// apply zero padding
+			if(padding == 'zero'){
+				y = -1;
+			}else if(padding == 'repeat'){
+				// apply repeated folding
+				y = shap[0] - (Math.abs(y) % shap[0]);
+			}else{
+				// apply mirror folding
+				y = -y - 1;
+			}
+		}if(y >= shap[0]){
+			// apply zero padding
+			if(padding == 'zero'){
+				y = -1;
+			}else if(padding == 'repeat'){
+				// apply repeated folding
+				y = y % shap[0];
+			}else{
+				// apply mirror folding
+				y = shap[0] - 1 - (y % shap[0]);
+			}
+		}
+		if(x < 0){
+			if(padding == 'zero'){
+				// apply zero padding
+				x = -1;
+			}else if(padding == 'repeat'){
+				// apply repeated folding
+				x = shap[1] - (Math.abs(x) % shap[1]);
+			}else{
+				// apply mirror folding
+				x = -x - 1;
+			}
+		}if(x >= shap[1]){
+			if(padding == 'zero'){
+				// apply zero padding
+				x = -1;
+			}else if(padding == 'repeat'){
+				// apply repeated folding
+				x = x % shap[1];
+			}else{
+				// apply mirror folding
+				x = shap[1] - 1 - (x % shap[1]);
+			}
+		}
+		return [x, y];
+	}
 }
 
 
