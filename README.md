@@ -15,33 +15,33 @@ which is why `IPLabImageAccess` will be replaced by `Image` for the rest of the 
 
 An `Image` object can either be instantiated with
 ```javascript
-var img = Image(height, width);
+var img = new Image(height, width);
 ```
 which will create a new `Image` object of dimensions `height`x`width` or with
 ```javascript
-var img = Image(height, width, {rgb:true});
+var img = new Image(height, width, {rgb:true});
 ```
 wich will create a new `Image` object of dimensions `height`x`width`x`3` when `rgb` is set to `true`.<br>
 Optionally `height` and `width` can be provided as an array `[height, width]` which makes it easy to create an image with the same dimensions as an existing image by using the [`shape`](#shape_) method
 ```javascript
-var img = Image(an_existing_image.shape());
+var img = new Image(an_existing_image.shape());
 ```
 By default the image is initialized to `0` for every pixel, but we can prvide an alternative initialization value by specifying the `init_value` parameter while instatiating a new `Image` object
 ```javascript
-var img = Image(height, width, {init_value:255});
+var img = new Image(height, width, {init_value:255});
 ```
 When using both optional arguments `rgb` and `init_value`, they need to be grouped in the same optional object
 ```javascript
-var img = Image(height, width, {rgb:true, init_value:255});
+var img = new Image(height, width, {rgb:true, init_value:255});
 ```
 An `Image` object can also be instatiated from an existing JavaScript array by passing it to the constructor
 ```javascript
-var img = Image(an_existing_array);
+var img = new Image(an_existing_array);
 ```
 Or finally, an empty image can be declared and afterwards be initialized with an existing array using the [`fromArray`](#fromArray) method.
 <a name="fromArrayUsage"></a>
 ```javascript
-var img = Image();
+var img = new Image();
 img.fromArray(some_existing_array);
 ```
 
