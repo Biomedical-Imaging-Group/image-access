@@ -7,6 +7,9 @@ class IPLabImageAccess{
             return;
 		// check if height an width are given separately
         }else if(IPLabImageAccess.ndims(height) == 0){
+			if(height != parseInt(height) || width != parseInt(width)){
+				throw new Error('Non-integer size provided in IPLabImageAccess constructor');
+			}
             if(!rgb){
 				// if rgb is false, initialize graylevel image
                 this.image = IPLabImageAccess.MultidimArray(init_value, height, width);
@@ -20,6 +23,9 @@ class IPLabImageAccess{
 			rgb = width.rgb || false;
 			init_value = width.init_value || 0;
             // height and width given as a an array
+			if(height[0] != parseInt(height[0]) || height[1] != parseInt(height[1])){
+				throw new Error('Non-integer size provided in IPLabImageAccess constructor');
+			}
             if(rgb || (height.length == 3 && height[2] == 3)){
                 this.image = IPLabImageAccess.MultidimArray(init_value, height[0], height[1], 3);
             }else{
@@ -113,6 +119,9 @@ class IPLabImageAccess{
 
     // Creates a new 1D/2D/3D array and initializes it to init_value
     static MultidimArray(init_value, height, width, depth){
+		if(height != parseInt(height) || width != parseInt(width)){
+			throw new Error('Non-integer size provided in MultidimArray');
+		}
 		// initialize the output array with the first dimension
         var output = new Array(height);
 		// for every element of the first dimension, add the other dimensions
@@ -144,6 +153,12 @@ class IPLabImageAccess{
 
     // returns the neighbourhood of an array
     static getNbh(img, x_pos, y_pos, nx, ny, padding = 'mirror'){
+		if(x_pos != parseInt(x_pos) || y_pos != parseInt(y_pos)){
+			throw new Error('Non-integer index provided in getNbh');
+		}
+		if(nx != parseInt(nx) || ny != parseInt(ny)){
+			throw new Error('Non-integer size provided in getNbh');
+		}
 		// initialize variables
         var count = 0;
         var shap = IPLabImageAccess.shape(img);
@@ -261,6 +276,9 @@ class IPLabImageAccess{
     }
     // returns the pixel at position (x,y)
     getPixel(x, y, padding='mirror'){
+		if(x != parseInt(x) || y != parseInt(y)){
+			throw new Error('Non-integer index provided in getPixel');
+		}
         // store original coordinate for message display
         var x_orig = x;
         var y_orig = y;
@@ -284,6 +302,9 @@ class IPLabImageAccess{
     
     // sets the pixel value at location (x,y)
     setPixel(x, y, value, padding='mirror'){
+		if(x != parseInt(x) || y != parseInt(y)){
+			throw new Error('Non-integer index provided in setPixel');
+		}
         // check if the correct type of pixel is provided (colour / gray)
         if(this.ndims() == 2 && typeof(value.length) != 'undefined'){
             // otherwise provide a warning but still set the pixel
@@ -317,6 +338,9 @@ class IPLabImageAccess{
     
     
     getRow(y, padding = 'mirror'){
+		if(y != parseInt(y)){
+			throw new Error('Non-integer index provided in getRow');
+		}
 		// initialize parameters
         var y_orig = y;
         var out_of_bounds = false
@@ -328,13 +352,16 @@ class IPLabImageAccess{
         y = IPLabImageAccess.applyBoundaryCondition(0, y, this.shape(), padding=padding)[1]
         if(y == -1){
 			// if zero padding should be applied, return a row of zeros
-			return rgb ? [Array(this.nx).fill(0), Array(this.nx).fill(0), Array(this.nx).fill(0)] : new Array(this.nx).fill(0);
+			return rgb ? new IPLabImageAccess([new Array(this.nx).fill([0, 0, 0])]) : new IPLabImageAccess([new Array(this.nx).fill(0)]);
         }else{
-			return this.image[y];
+			return new IPLabImageAccess([this.image[y]]);
 		}
     }
     
     getColumn(x, padding = 'mirror'){
+		if(x != parseInt(x)){
+			throw new Error('Non-integer index provided in getColumn');
+		}
 		// initialize parameters
         var out_of_bounds = false
         var rgb = false;     
@@ -345,17 +372,20 @@ class IPLabImageAccess{
         x = IPLabImageAccess.applyBoundaryCondition(x, 0, this.shape(), padding=padding)[0]
         if(x == -1){
 			// if zero padding should be applied, return a column of zeros
-			return rgb ? [Array(this.ny).fill(0), Array(this.ny).fill(0), Array(this.ny).fill(0)] : new Array(this.ny).fill(0);
+			return rgb ? new IPLabImageAccess([new Array(this.nx).fill([0, 0, 0])]) : new IPLabImageAccess([new Array(this.nx).fill(0)]);
         }else{
 			// extract column
-			return this.image.map(function(element) {return element[x];});
+			return new IPLabImageAccess([this.image.map(function(element) {return element[x];})]);
 		}
     }
     
     putRow(y, new_row, padding='mirror'){
+		if(y != parseInt(y)){
+			throw new Error('Non-integer index provided in putRow');
+		}
 		// check if a row has been provided
-		if(typeof(new_row.length) == 'undefined' || new_row.length != this.nx){
-			throw new Error('putRow: The provided row has length ' + new_row.length + ' but the image has width ' + this.nx);
+		if(new_row.nx != this.nx){
+			throw new Error('putRow: The provided row has length ' + new_row.nx + ' but the image has width ' + this.nx);
 		}
         // check if the correct type of pixel is provided (colour / gray)
         if(this.ndims() == 2 && Image.ndims(new_row) == 2 && Image.shape(new_row)[1] == 3){
@@ -380,13 +410,16 @@ class IPLabImageAccess{
         }
         // padding
         y = IPLabImageAccess.applyBoundaryCondition(0, y, this.shape(), padding=padding)[1]
-        this.image[y] = new_row;
+        this.image[y] = new_row.image[0];
     }
     
     
     putColumn(x, new_column, padding='mirror'){
+		if(x != parseInt(x)){
+			throw new Error('Non-integer index provided in putColumn');
+		}
         // check if a row has been provided
-		if(typeof(new_column.length) == 'undefined' || new_column.length != this.ny){
+		if(new_column.nx != this.ny){
 			throw new Error('putRow: The provided column has length ' + new_column.length + ' but the image has height ' + this.ny);
 		}
         // check if the correct type of pixel is provided (colour / gray)
@@ -411,7 +444,7 @@ class IPLabImageAccess{
 		
 		// put new column
 		for(var y=0; y < this.ny; y++){
-			this.image[y][x] = new_column[y]
+			this.image[y][x] = new_column.image[0][y]
 		}
     }
     
@@ -510,6 +543,9 @@ class IPLabImageAccess{
     
 	// put a sub-image into the image
     putSubImage(x, y, img){
+		if(x != parseInt(x) || y != parseInt(y)){
+			throw new Error('Non-integer index provided in putSubImage');
+		}
 		// check if the sub-image location is inside the image
         if(x < 0 || y < 0 || x+img.nx > this.nx || x+img.ny > this.ny){
            throw new Error("Subimage out of bounds");
