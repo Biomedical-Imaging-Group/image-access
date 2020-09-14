@@ -380,12 +380,24 @@ class IPLabImageAccess{
     }
     
     putRow(y, new_row, padding='mirror'){
+		var is_row = true;
+		// check that y is integer
 		if(y != parseInt(y)){
 			throw new Error('Non-integer index provided in putRow');
 		}
-		// check if a row has been provided
-		if(new_row.nx != this.nx){
+		// check that a 1D image object has been provided
+		if(new_row.nx != 1 && new_row.ny != 1){
+			throw new Error('putRow: Provide a 1D image object that contains either a single row or a single column for new_row.')
+		}
+		// check if a column has been provided
+		if(new_row.nx == 1){
+			is_row = false;
+		}
+		// check if the row has the correct length
+		if(is_row == true && new_row.nx != this.nx){
 			throw new Error('putRow: The provided row has length ' + new_row.nx + ' but the image has width ' + this.nx);
+		}else if(is_row == false && new_row.ny != this.nx){
+			throw new Error('putRow: The provided row has length ' + new_row.ny + ' but the image has width ' + this.nx);
 		}
         // check if the correct type of pixel is provided (colour / gray)
         if(this.ndims() == 2 && Image.ndims(new_row) == 2 && Image.shape(new_row)[1] == 3){
@@ -393,7 +405,7 @@ class IPLabImageAccess{
             console.warn("Writing an rgb value to a grayscale image converts this pixel to rgb.")
         }
         // check if the correct type of pixel is provided (colour / gray)
-        if(this.ndims() == 3 && Image.ndims(new_row) == 1){
+        if(this.ndims() == 3 && Image.ndims(new_row) == 2){
             // otherwise provide a warning but still set the pixel
             console.warn("Writing grayscale value to an rgb image converts this pixel to grayscale.")
         }
@@ -409,18 +421,38 @@ class IPLabImageAccess{
             rgb = true;
         }
         // padding
-        y = IPLabImageAccess.applyBoundaryCondition(0, y, this.shape(), padding=padding)[1]
-        this.image[y] = new_row.image[0];
+        y = IPLabImageAccess.applyBoundaryCondition(0, y, this.shape(), padding=padding)[1];
+		// insert new row
+		if(is_row == true){
+			this.image[y] = new_row.image[0];
+		}else{
+			for(var x=0; x < this.nx; x++){
+				this.image[y][x] = new_row.image[x][0];
+			}
+		}
+        
     }
     
     
     putColumn(x, new_column, padding='mirror'){
+		var is_row = true;
+		// check that x is integer
 		if(x != parseInt(x)){
 			throw new Error('Non-integer index provided in putColumn');
 		}
-        // check if a row has been provided
-		if(new_column.nx != this.ny){
-			throw new Error('putRow: The provided column has length ' + new_column.length + ' but the image has height ' + this.ny);
+		// check that a 1D image object has been provided
+		if(new_column.nx != 1 && new_column.ny != 1){
+			throw new Error('putColumn: Provide a 1D image object that contains either a single row or a single column for new_column.')
+		}
+		// check if a column has been provided
+		if(new_column.nx == 1){
+			is_row = false;
+		}
+        // check if the column has the correct length
+		if(is_row == true && new_column.nx != this.ny){
+			throw new Error('putColumn: The provided column has length ' + new_column.nx + ' but the image has height ' + this.ny);
+		}else if(is_row == false && new_column.ny != this.ny){
+			throw new Error('putColumn: The provided column has length ' + new_column.ny + ' but the image has height ' + this.ny);
 		}
         // check if the correct type of pixel is provided (colour / gray)
         if(this.ndims() == 2 && Image.ndims(new_column) == 2 && Image.shape(new_column)[1] == 3){
@@ -440,12 +472,19 @@ class IPLabImageAccess{
             rgb = true;
         }
         // padding
-        x = IPLabImageAccess.applyBoundaryCondition(x, 0, this.shape(), padding=padding)[0]
+        x = IPLabImageAccess.applyBoundaryCondition(x, 0, this.shape(), padding=padding)[0];
 		
 		// put new column
-		for(var y=0; y < this.ny; y++){
-			this.image[y][x] = new_column.image[0][y]
+		if(is_row == true){
+			for(var y=0; y < this.ny; y++){
+				this.image[y][x] = new_column.image[0][y];
+			}
+		}else{
+			for(var y=0; y < this.ny; y++){
+				this.image[y][x] = new_column.image[y][0];
+			}
 		}
+		
     }
     
 	// returns the transpose of an array
@@ -458,6 +497,9 @@ class IPLabImageAccess{
     transposeImage() {
 		// apply transpose to the image
         this.image = IPLabImageAccess.transpose(this.image) 
+		var old_nx = this.nx;
+		this.nx = this.ny;
+		this.ny = old_nx;
     }
     
 	// compares two arrays
@@ -510,7 +552,7 @@ class IPLabImageAccess{
 			// sort the output array in ascending order
             gray.sort((a,b) => a-b);
 			// return the sorted array
-            return gray;
+            return new IPLabImageAccess([gray]);
         }else{
             var r_ = new Array();
             var g_ = new Array();
@@ -532,7 +574,7 @@ class IPLabImageAccess{
             g_.sort((a,b) => a-b);
             b_.sort((a,b) => a-b);
 			// return the sorted array
-            return [r_, g_, b_];
+            return [new IPLabImageAccess([r_]), new IPLabImageAccess([g_]), new IPLabImageAccess([b_])];
         }
     }
     
