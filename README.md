@@ -8,7 +8,7 @@ The class was developed in the most part by:
 under the guidance, help, testing and feedback of:
 * Alejandro Noguerón Aramburu (alejandro.nogueronaramburu@epfl.ch, [Alejandro-1996](https://github.com/Alejandro-1996))
 * [Pol del Aguila Pla](https://poldap.github.io), (pol.delaguilapla@epfl.ch, [poldap](https://github.com/poldap))
-* [Daniel Sage ](http://bigwww.epfl.ch/sage/index.html), (daniel.sage@epfl.ch, [dasv74](https://github.com/dasv74))
+* [Daniel Sage](http://bigwww.epfl.ch/sage/index.html), (daniel.sage@epfl.ch, [dasv74](https://github.com/dasv74))
 
 It was supported by EPFLs [Center for Digital Education (CEDE)](https://www.epfl.ch/education/educational-initiatives/cede/), and it belongs to the [Biomedical Imaging Group](http://bigwww.epfl.ch/).
 
