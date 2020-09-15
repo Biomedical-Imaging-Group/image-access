@@ -4,6 +4,8 @@ Convinient class for handling images in JavaScript.
 ## Overview
 The `IPLabImageAccess` class has been developed for teaching the coding of Image Processing algorithms at the pixel level. The class is written in JavaScript and is intended to be used in [Jupyter Notebooks](https://jupyter.org/) running the [IJavascript](http://n-riesco.github.io/ijavascript/) kernel. However, it can also be used in a native JavaScript environment. The aim of the `IPLabImageAccess` class is to facilitate the creation and modification of images in JavaScript and as such it provides an easy-to-use interface to multidimensional arrays which can represent graylevel or color images, offering utility functions and pixel access, while taking care of boundary conditions.
 
+The _IPLabImageAccess example notebook.ipynb_ showcases the basic functionalities of the `IPLabImageAccess` class. Members of EPFL can use the following link to run the notebook on [Noto](https://www.epfl.ch/education/educational-initiatives/cede/digitaltools/noto/): https://bit.ly/2FGVRzn
+
 ## Main Features
 * Creation of new color- or graylevel images from size and initial value parameters or from an existing JavaScript array
 * Single-pixel _R/W_ access
@@ -19,7 +21,7 @@ The `IPLabImageAccess` class has been developed for teaching the coding of Image
 ## Usage
 To use the `IPLabImageAccess` class, use the `require` statement. It is recommended to import the class as a constant `Image` by using the following code
 ```javascript
-const Image = require('IPLabImageAccess.js')
+const Image = require('./IPLabImageAccess.js')
 ```
 but it can also be imported as `var` instead of `const` to allow for multiple importations.
 
