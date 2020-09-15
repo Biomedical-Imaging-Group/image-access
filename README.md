@@ -6,10 +6,10 @@ The `IPLabImageAccess` class was created to teach the coding of Image Processing
 
 ## Main Features
 * Creation of new color- or graylevel images from size and initial value parameters or from an existing JavaScript array
-* Single-pixel R/W access
-* Row/Column R/W access
-* Neighborhood R access
-* Subimage W access
+* Single-pixel _R/W_ access
+* Row/Column _R/W_ access
+* Neighborhood _R_ access
+* Subimage _W_ access
 * Easy access to image size and dimensionality
 * Integrated minimum/maximum and normilize methods
 * Transpose images
