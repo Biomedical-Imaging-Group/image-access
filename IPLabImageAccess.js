@@ -263,7 +263,7 @@ class IPLabImageAccess{
         var min = this.getMin()
         var range = this.getMax() - min
 		// loop through all pixels
-        for(var x = 0; y < this.nx; y++){
+        for(var x = 0; x < this.nx; x++){
             for(var y = 0; y < this.ny; y++){
                 var val = this.getPixel(x, y)
 				// normalize pixel (range = [0,1])
