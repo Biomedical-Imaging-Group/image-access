@@ -41,6 +41,11 @@ class IPLabImageAccess{
         // assign image sizes
         this.nx = this.shape()[1];
         this.ny = this.shape()[0];
+		// initialize min and max
+		this.min = this.getMin(true);
+		this.max = this.getMax(true);
+		// initialize change_check
+		this.change_check = false;
     }
     
     // gets the image from a provided array
@@ -61,6 +66,9 @@ class IPLabImageAccess{
 		// update image sizes
         this.nx = this.shape()[1];
         this.ny = this.shape()[0];
+		// recalculate min and max
+		this.min = this.getMin(true);
+		this.max = this.getMax(true);
     }
     
     // returns a copy of the image
@@ -245,15 +253,36 @@ class IPLabImageAccess{
     
     
     // returns the maximum value of the image
-    getMax(){
-		// apply getMax to the image
-        return IPLabImageAccess.getMax(this.image);
+    getMax(recalc=false){
+		if(recalc==true){
+			// apply getMax to the image
+			this.max = IPLabImageAccess.getMax(this.image);
+		}else if(this.change_check==true){
+			// apply getMax to the image
+			this.max = IPLabImageAccess.getMax(this.image);
+			// also rerun getMin
+			this.min = IPLabImageAccess.getMin(this.image);
+			// reset change_check
+			this.change_check = false;
+		}
+		return this.max;
     }
     
     // returns the minimum value of the image
-    getMin(){
-		// apply getMin to the image
-        return IPLabImageAccess.getMin(this.image);
+    getMin(recalc=false){
+		if(recalc==true){
+			// apply getMin to the image
+			return IPLabImageAccess.getMin(this.image);
+		}else if(this.change_check==true){
+			// also rerun getMax
+			this.max = IPLabImageAccess.getMax(this.image);
+			// apply getMin to the image
+			this.min = IPLabImageAccess.getMin(this.image);
+			// reset change_check
+			this.change_check = false;
+		}
+		return this.min;
+		
     }
     
 	// normalize the image statics
@@ -334,6 +363,8 @@ class IPLabImageAccess{
         // apply boundary conditions
         [x,y] = IPLabImageAccess.applyBoundaryCondition(x, y, shap, padding=padding)
         this.image[y][x] = value;
+		// reset change_check
+		this.change_check = true;
     }
     
     
@@ -430,7 +461,8 @@ class IPLabImageAccess{
 				this.image[y][x] = new_row.image[x][0];
 			}
 		}
-        
+        // reset change_check
+		this.change_check = true;
     }
     
     
@@ -484,7 +516,8 @@ class IPLabImageAccess{
 				this.image[y][x] = new_column.image[y][0];
 			}
 		}
-		
+		// reset change_check
+		this.change_check = true;
     }
     
 	// returns the transpose of an array
@@ -516,7 +549,7 @@ class IPLabImageAccess{
 				}
 			}
 			// check if the difference between the arrays is greater than the tolerance
-			else if(Math.abs(a1[i] - a2[i]) > tol) {
+			else if(Math.abs(a1[i] - a2[i]) > tol || isNaN(a1[i]) || isNaN(a2[i])) {
 				return false;
 			}
 		}
@@ -599,7 +632,9 @@ class IPLabImageAccess{
                 var value = img.getPixel(k-x, l-y)
                 this.setPixel(k, l, value)
             }
-        }                
+        }
+		// reset change_check
+		this.change_check = true;		
     }
 	
 	// adjusts the index depending on the boundary conditions
