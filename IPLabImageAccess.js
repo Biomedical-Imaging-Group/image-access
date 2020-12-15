@@ -637,6 +637,26 @@ class IPLabImageAccess{
 		this.change_check = true;		
     }
 	
+	    getSubImage(x, y, nx, ny){
+        if(x != parseInt(x) || y != parseInt(y)){
+			throw new Error('Non-integer index provided in putSubImage');
+		}
+        // check if the sub-image location is inside the image
+        if(x < 0 || y < 0 || x+nx > this.nx || x+ny > this.ny){
+           throw new Error("Subimage out of bounds");
+        }
+        var output = new IPLabImageAccess(ny, nx);
+        
+        for(var k = x; k < x+nx; k++){
+            for(var l = y; l < y+ny; l++){
+				// put the pixel of the subimage into the image
+                var value = this.getPixel(k, l)
+                output.setPixel(k - x, l - y, value)
+            }
+        }
+        return output;
+    }
+	
 	// adjusts the index depending on the boundary conditions
 	static applyBoundaryCondition(x, y, shap, padding='mirror'){
 		// padding
@@ -687,6 +707,54 @@ class IPLabImageAccess{
 			}
 		}
 		return [x, y];
+	}
+	
+	// returns the image as a formatted string that can be displayed on the console
+	visualize(decimals=3){
+		// Determine needed length of strings
+		var int_check = true;
+		var pre_l = 0;
+		var post_l = 0;
+		for(var row=0; row < this.ny; row++){
+			for(var col=0; col < this.nx; col++){
+				if(int_check==true && !Number.isInteger(this.getPixel(col, row))){
+					int_check = false;
+				}
+				var int_val = this.getPixel(col, row).toString().split('.');
+				pre_l = Math.max(pre_l, int_val[0].length);
+				if(int_val.length > 1){
+					post_l = Math.max(post_l, int_val[1].length);
+				}
+			}
+		}
+		decimals = Math.min(decimals, post_l);
+		// Construct image string
+		var msg = '[[ ';
+		for(var row=0; row < this.ny; row++){
+			if(row != 0){
+				msg += '\n [ ';
+			}
+			for(var col=0; col < this.nx; col++){
+				if(int_check==true){
+					msg += this.getPixel(col, row).toString(10).padStart(pre_l, ' ') + ' ';
+				}else if(decimals==0){
+					msg += this.getPixel(col, row).toFixed(0).toString(10).padStart(pre_l, ' ') + ' ';
+				}else{
+					if(Number.isInteger(this.getPixel(col, row))){
+						msg += this.getPixel(col, row).toString(10).padStart(pre_l+decimals+1, ' ') + ' ';
+					}else{
+						if(post_l==decimals){
+							msg += this.getPixel(col, row).toString(10).padStart(pre_l+decimals+1, ' ') + ' ';
+						}else{
+							msg += this.getPixel(col, row).toString(10).slice(0, -(post_l-decimals)).padStart(pre_l+decimals+1, ' ') + ' ';
+						}
+					}
+				}
+			}
+			msg += ']'
+		}
+		msg += ']\n'
+		return msg
 	}
 }
 
