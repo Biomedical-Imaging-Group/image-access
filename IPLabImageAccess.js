@@ -720,7 +720,7 @@ class IPLabImageAccess{
 				if(int_check==true && !Number.isInteger(this.getPixel(col, row))){
 					int_check = false;
 				}
-				var int_val = this.getPixel(col, row).toString().split('.');
+				var int_val = this.getPixel(col, row).toLocaleString('fullwide', {useGrouping:false, maximumFractionDigits:20}).split('.');
 				pre_l = Math.max(pre_l, int_val[0].length);
 				if(int_val.length > 1){
 					post_l = Math.max(post_l, int_val[1].length);
@@ -740,15 +740,7 @@ class IPLabImageAccess{
 				}else if(decimals==0){
 					msg += this.getPixel(col, row).toFixed(0).toString(10).padStart(pre_l, ' ') + ' ';
 				}else{
-					if(Number.isInteger(this.getPixel(col, row))){
-						msg += this.getPixel(col, row).toString(10).padStart(pre_l+decimals+1, ' ') + ' ';
-					}else{
-						if(post_l==decimals){
-							msg += this.getPixel(col, row).toString(10).padStart(pre_l+decimals+1, ' ') + ' ';
-						}else{
-							msg += this.getPixel(col, row).toString(10).slice(0, -(post_l-decimals)).padStart(pre_l+decimals+1, ' ') + ' ';
-						}
-					}
+					msg += this.getPixel(col, row).toFixed(decimals).toString(10).padStart(pre_l+decimals+1, ' ') + ' ';
 				}
 			}
 			msg += ']'
