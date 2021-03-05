@@ -534,32 +534,100 @@ class IPLabImageAccess{
 		this.nx = this.ny;
 		this.ny = old_nx;
     }
-    
-	// compares two arrays
-    static arrayCompare(a1, a2, tol=1e-5){
+	
+	// function that checks if there is a normalization error between the arrays img1 and img2
+	static isNormalizationError(img1, img2, c={'c':null}, tol=1e-3){
 		// check if the array have the same size
-		if(a1.length != a2.length) {
+		if(img1.length != img2.length){
 			return false;
 		}
-		for(var i in a1) {
-		 // Don't forget to check for arrays in our arrays.
-			if(a1[i] instanceof Array && a2[i] instanceof Array) {
-				if(!IPLabImageAccess.arrayCompare(a1[i], a2[i], tol = tol)) {
+		for(var i in img1){
+		    // Don't forget to check for arrays in our arrays.
+			if(img1[i] instanceof Array && img2[i] instanceof Array) {
+				if(!IPLabImageAccess.isNormalizationError(img1[i], img2[i], c)){
 					return false;
 				}
 			}
-			// check if the difference between the arrays is greater than the tolerance
-			else if(Math.abs(a1[i] - a2[i]) > tol || isNaN(a1[i]) || isNaN(a2[i])) {
-				return false;
+			else{
+				// Initialize proportionality constant
+				if(c.c == null && img1[i] != 0 && img2[i] != 0){
+					   c.c = img1[i] / img2[i];
+				}
+				// If only one is 0, not proportional
+				if((img1[i] == 0) ^ (img2[i] == 0)){
+					return false;
+				}
+				// Check proportionality constant, if both are not 0
+				if(img2[i] != 0){
+					if (Math.abs(img1[i]/img2[i] - c.c) > tol){
+						return false;
+					}
+				}
 			}
 		}
 		return true;
 	}
 	
+	isNormalizationError(img){
+		return IPLabImageAccess.isNormalizationError(this.image, img.image);
+	}
+    
+	// compares two arrays
+    static arrayCompare(a1, a2, err={'msg':null}, tol=1e-5, utilObj={'mismatch':0, 'maxErr':0, 'count':0}){
+		// check if only tolerance has been provided
+		if(typeof err !== 'object' && err !== null){
+			tol = err;
+			err = {'msg':null};
+		}
+		// check if the array have the same size
+		if(a1.length != a2.length){
+			return false;
+		}
+		let norm_err = true;
+		let check_err = false;
+		let single_row = false;
+		let c = {'c':null}
+		for(let i in a1){
+		    // Don't forget to check for arrays in our arrays.
+			if(a1[i] instanceof Array && a2[i] instanceof Array){
+				if(!IPLabImageAccess.arrayCompare(a1[i], a2[i], err, tol, utilObj)){
+					check_err = true;
+					if(!IPLabImageAccess.isNormalizationError(a1[i], a2[i], c)){
+						norm_err = false;
+					}
+				}
+			}
+			// check if the difference between the arrays is greater than the tolerance
+			else{
+				utilObj.count++;
+				if(Math.abs(a1[i] - a2[i]) > tol || isNaN(a1[i]) || isNaN(a2[i])){
+					utilObj.mismatch++;
+					if(Math.abs(a1[i] - a2[i]) > Math.abs(utilObj.maxErr)){
+						utilObj.maxErr = a1[i] - a2[i];
+					}
+					check_err = true;
+					single_row = true;
+				}
+			}
+		}
+		if(check_err){
+			if(single_row){
+				return false;
+			}
+			err.msg = 'Number of mismatched elements: ' + utilObj.mismatch + ' (' + Math.round(utilObj.mismatch/utilObj.count*100) + '%)' +
+						'\nMax error: ' + utilObj.maxErr;
+			if(norm_err){
+				err.msg += '\nNormalization error: The image should be normalized by a factor of ' + c.c;
+			}
+			return false;
+		}
+		return true;
+	}
+	
     // compares the image with another image
-    imageCompare(newImage, tol=1e-5){
+    imageCompare(newImage, err, tol){
 		// apply arrayCompare to the two images
-        return IPLabImageAccess.arrayCompare(newImage.image, this.image, tol = tol);
+        return IPLabImageAccess.arrayCompare(newImage.image, this.image, err, tol);
     }
     
 	// returns the elements of the image that are under the structuring element b in ascending order
@@ -711,6 +779,9 @@ class IPLabImageAccess{
 	
 	// returns the image as a formatted string that can be displayed on the console
 	visualize(decimals=3){
+		if(this.ndims(img) == 3){
+            throw new Error("Visualization of RGB image is not yet implemented.")
+        }
 		// Determine needed length of strings
 		var int_check = true;
 		var pre_l = 0;
