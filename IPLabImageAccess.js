@@ -1,51 +1,54 @@
 class IPLabImageAccess{
     // initializes a new blank image
-    constructor(height, width = {}, {rgb=false, init_value=0} = {}){
-		// check usage
-        if(typeof(height) == 'undefined'){
-			// if called without arguments, return without initializing the image
-            return;
-		// check if height an width are given separately
-        }else if(IPLabImageAccess.ndims(height) == 0){
-			if(height != parseInt(height) || width != parseInt(width)){
-				throw new Error('Non-integer size provided in IPLabImageAccess constructor');
+    constructor(height, width = {}, {rgb=false, init_value=0} = {}, nbh=false){
+		if(nbh == false){
+			// check usage
+			if(typeof(height) == 'undefined'){
+				// if called without arguments, return without initializing the image
+				return;
+			// check if height an width are given separately
+			}else if(IPLabImageAccess.ndims(height) == 0){
+				if(height != parseInt(height) || width != parseInt(width)){
+					throw new Error('Non-integer size provided in IPLabImageAccess constructor');
+				}
+				if(!rgb){
+					// if rgb is false, initialize graylevel image
+					this.image = IPLabImageAccess.MultidimArray(init_value, height, width);
+				}else{
+					// if rgb is true, initialize color image
+					this.image = IPLabImageAccess.MultidimArray(init_value, height, width, 3);
+				}
+			// check if height an width are given as an array
+			}else if(IPLabImageAccess.ndims(height) == 1 && (height.length == 2 || height.length == 3)){
+				// in this case, the optional parameters are stored in width
+				rgb = width.rgb || false;
+				init_value = width.init_value || 0;
+				// height and width given as a an array
+				if(height[0] != parseInt(height[0]) || height[1] != parseInt(height[1])){
+					throw new Error('Non-integer size provided in IPLabImageAccess constructor');
+				}
+				if(rgb || (height.length == 3 && height[2] == 3)){
+					this.image = IPLabImageAccess.MultidimArray(init_value, height[0], height[1], 3);
+				}else{
+					this.image = IPLabImageAccess.MultidimArray(init_value, height[0], height[1]);
+				}
+			// check if the image is given as an array
+			}else if(IPLabImageAccess.ndims(height) == 2 || IPLabImageAccess.ndims(height) == 3){
+				// initialize from array
+				this.fromArray(height);
+			}else{
+				throw new Error("Unrecognized input data in IPLabImageAccess constructor");
 			}
-            if(!rgb){
-				// if rgb is false, initialize graylevel image
-                this.image = IPLabImageAccess.MultidimArray(init_value, height, width);
-            }else{
-				// if rgb is true, initialize color image
-                this.image = IPLabImageAccess.MultidimArray(init_value, height, width, 3);
-            }
-		// check if height an width are given as an array
-        }else if(IPLabImageAccess.ndims(height) == 1 && (height.length == 2 || height.length == 3)){
-			// in this case, the optional parameters are stored in width
-			rgb = width.rgb || false;
-			init_value = width.init_value || 0;
-            // height and width given as a an array
-			if(height[0] != parseInt(height[0]) || height[1] != parseInt(height[1])){
-				throw new Error('Non-integer size provided in IPLabImageAccess constructor');
-			}
-            if(rgb || (height.length == 3 && height[2] == 3)){
-                this.image = IPLabImageAccess.MultidimArray(init_value, height[0], height[1], 3);
-            }else{
-                this.image = IPLabImageAccess.MultidimArray(init_value, height[0], height[1]);
-            }
-		// check if the image is given as an array
-        }else if(IPLabImageAccess.ndims(height) == 2 || IPLabImageAccess.ndims(height) == 3){
-            // initialize from array
-            this.fromArray(height);
-        }else{
-            throw new Error("Unrecognized input data in IPLabImageAccess constructor");
-        }
-        // assign image sizes
-        this.nx = this.shape()[1];
-        this.ny = this.shape()[0];
-		// initialize min and max
-		this.min = this.getMin(true);
-		this.max = this.getMax(true);
-		// initialize change_check
-		this.change_check = false;
+			// assign image sizes
+			this.nx = IPLabImageAccess.shape(this.image)[1];
+			this.ny = IPLabImageAccess.shape(this.image)[0];
+			// initialize min and max
+			this.min = this.getMin(true);
+			this.max = this.getMax(true);
+			this.change_check = false;
+		}else{
+			this.change_check = true;
+		}
     }
     
     // gets the image from a provided array
@@ -64,8 +67,8 @@ class IPLabImageAccess{
 		// copy the array into the image variable using JSON for multidimensional array copying
         this.image = JSON.parse(JSON.stringify(arr));
 		// update image sizes
-        this.nx = this.shape()[1];
-        this.ny = this.shape()[0];
+        this.nx = IPLabImageAccess.shape(this.image)[1];
+        this.ny = IPLabImageAccess.shape(this.image)[0];
 		// recalculate min and max
 		this.min = this.getMin(true);
 		this.max = this.getMax(true);
@@ -122,7 +125,7 @@ class IPLabImageAccess{
     // returns the shape of the image
     shape(){
 		// apply shape to the image
-        return IPLabImageAccess.shape(this.image);
+        return [this.ny, this.nx];
     }
 
     // Creates a new 1D/2D/3D array and initializes it to init_value
@@ -199,9 +202,37 @@ class IPLabImageAccess{
     
     // returns the neighbourhood of the image
     getNbh(x_pos, y_pos, nx, ny, padding = 'mirror'){
-		// get the neighbourhood of the image
-        var nbh = new IPLabImageAccess(IPLabImageAccess.getNbh(this.image, x_pos, y_pos, nx, ny, padding=padding));
-        return nbh;
+		if(x_pos != parseInt(x_pos) || y_pos != parseInt(y_pos)){
+			throw new Error('Non-integer index provided in getNbh');
+		}
+		if(nx != parseInt(nx) || ny != parseInt(ny)){
+			throw new Error('Non-integer size provided in getNbh');
+		}
+        var neigh = IPLabImageAccess.MultidimArray(0, ny, nx);
+        for(var y = 0; y < ny; y++){  
+            for(var x = 0; x < nx; x++){
+                // calculate x and y position offset
+                var y_offset = y_pos - parseInt(ny/2) + y;
+                var x_offset = x_pos - parseInt(nx/2) + x;
+				// apply boundary condition to indexes
+                [x_offset, y_offset] = IPLabImageAccess.applyBoundaryCondition(x_offset, y_offset, [this.ny, this.nx], padding)
+				// assign pixel to the neighbourhood
+				if(x_offset == -1 || y_offset == -1){
+					// zero padding 
+					neigh[y][x] = IPLabImageAccess.ndims(this.image) == 3 ? [0, 0, 0] : 0;
+				}else{
+					// other padding
+					neigh[y][x] = this.image[y_offset][x_offset];
+				}
+                
+            }
+        }
+		// Create new image (optimized version)
+		var out = new IPLabImageAccess(0, 0, {}, true);
+		out.image = neigh;
+		out.nx = nx;
+		out.ny = ny;
+        return out;
     }
     
     // calculates the minimum per color channel of two color- or graylevel pixels
@@ -257,7 +288,7 @@ class IPLabImageAccess{
 		if(recalc==true){
 			// apply getMax to the image
 			this.max = IPLabImageAccess.getMax(this.image);
-		}else if(this.change_check==true){
+		}else if(this.change_check==true || typeof(this.max) == 'undefined'){
 			// apply getMax to the image
 			this.max = IPLabImageAccess.getMax(this.image);
 			// also rerun getMin
@@ -272,8 +303,8 @@ class IPLabImageAccess{
     getMin(recalc=false){
 		if(recalc==true){
 			// apply getMin to the image
-			return IPLabImageAccess.getMin(this.image);
-		}else if(this.change_check==true){
+			this.min = IPLabImageAccess.getMin(this.image);
+		}else if(this.change_check==true || typeof(this.max) == 'undefined'){
 			// also rerun getMax
 			this.max = IPLabImageAccess.getMax(this.image);
 			// apply getMin to the image
@@ -288,7 +319,7 @@ class IPLabImageAccess{
 	// normalize the image statics
     normalize(){
 		// initialize parameters
-        var output = new IPLabImageAccess(this.shape())
+        var output = new IPLabImageAccess([this.ny, this.nx])
         var min = this.getMin()
         var range = this.getMax() - min
 		// loop through all pixels
@@ -308,21 +339,11 @@ class IPLabImageAccess{
 		if(x != parseInt(x) || y != parseInt(y)){
 			throw new Error('Non-integer index provided in getPixel');
 		}
-        // store original coordinate for message display
-        var x_orig = x;
-        var y_orig = y;
-        // variable to check if an out of bounds pixel has been accessed
-        var out_of_bounds = false;
-        var rgb = false;
-        // check if image has colour channels
-        if(IPLabImageAccess.ndims(this.image) == 3){
-            rgb = true;
-        }
         // apply boundary conditions
-		[x, y] = IPLabImageAccess.applyBoundaryCondition(x, y, this.shape(), padding=padding);
+		[x, y] = IPLabImageAccess.applyBoundaryCondition(x, y, [this.ny, this.nx], padding=padding);
         if(x == -1 || y == -1){
 			// zero padding
-			return rgb ? [0, 0, 0] : 0;
+			return IPLabImageAccess.ndims(this.image) == 3 ? [0, 0, 0] : 0;
 		}else{
 			// other padding
 			return this.image[y][x];
@@ -352,7 +373,7 @@ class IPLabImageAccess{
         var x_orig = x;
         var y_orig = y;
         // shape of the image
-        var shap = this.shape();
+        var shap = [this.ny, this.nx];
         // variable to check if an out of bounds pixel has been accessed
         var out_of_bounds = false;
         var rgb = false;
@@ -380,7 +401,7 @@ class IPLabImageAccess{
             rgb = true;
         }
         // padding
-        y = IPLabImageAccess.applyBoundaryCondition(0, y, this.shape(), padding=padding)[1]
+        y = IPLabImageAccess.applyBoundaryCondition(0, y, [this.ny, this.nx], padding=padding)[1]
         if(y == -1){
 			// if zero padding should be applied, return a row of zeros
 			return rgb ? new IPLabImageAccess([new Array(this.nx).fill([0, 0, 0])]) : new IPLabImageAccess([new Array(this.nx).fill(0)]);
@@ -400,7 +421,7 @@ class IPLabImageAccess{
             rgb = true;
         }
         // padding
-        x = IPLabImageAccess.applyBoundaryCondition(x, 0, this.shape(), padding=padding)[0]
+        x = IPLabImageAccess.applyBoundaryCondition(x, 0, [this.ny, this.nx], padding=padding)[0]
         if(x == -1){
 			// if zero padding should be applied, return a column of zeros
 			return rgb ? new IPLabImageAccess([new Array(this.nx).fill([0, 0, 0])]) : new IPLabImageAccess([new Array(this.nx).fill(0)]);
@@ -452,7 +473,7 @@ class IPLabImageAccess{
             rgb = true;
         }
         // padding
-        y = IPLabImageAccess.applyBoundaryCondition(0, y, this.shape(), padding=padding)[1];
+        y = IPLabImageAccess.applyBoundaryCondition(0, y, [this.ny, this.nx], padding=padding)[1];
 		// insert new row
 		if(is_row == true){
 			this.image[y] = new_row.image[0];
@@ -504,7 +525,7 @@ class IPLabImageAccess{
             rgb = true;
         }
         // padding
-        x = IPLabImageAccess.applyBoundaryCondition(x, 0, this.shape(), padding=padding)[0];
+        x = IPLabImageAccess.applyBoundaryCondition(x, 0, [this.ny, this.nx], padding=padding)[0];
 		
 		// put new column
 		if(is_row == true){
@@ -527,7 +548,7 @@ class IPLabImageAccess{
     }
     
 	// returns the transpose of the image
-    transposeImage() {
+    transposeImage(){
 		// apply transpose to the image
         this.image = IPLabImageAccess.transpose(this.image) 
 		var old_nx = this.nx;
@@ -570,7 +591,6 @@ class IPLabImageAccess{
 	
 	isNormalizationError(img){
 		return IPLabImageAccess.isNormalizationError(this.image, img.image);
-	}
     
 	// compares two arrays
     static arrayCompare(a1, a2, err={'msg':null}, tol=1e-5, utilObj={'mismatch':0, 'maxErr':0, 'count':0}){
