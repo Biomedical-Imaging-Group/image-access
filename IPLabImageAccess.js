@@ -591,6 +591,7 @@ class IPLabImageAccess{
 	
 	isNormalizationError(img){
 		return IPLabImageAccess.isNormalizationError(this.image, img.image);
+    }
     
 	// compares two arrays
     static arrayCompare(a1, a2, err={'msg':null}, tol=1e-5, utilObj={'mismatch':0, 'maxErr':0, 'count':0}){
@@ -799,7 +800,7 @@ class IPLabImageAccess{
 	
 	// returns the image as a formatted string that can be displayed on the console
 	visualize(decimals=3){
-		if(this.ndims(img) == 3){
+		if(this.ndims(this.image) == 3){
             throw new Error("Visualization of RGB image is not yet implemented.")
         }
 		// Determine needed length of strings
