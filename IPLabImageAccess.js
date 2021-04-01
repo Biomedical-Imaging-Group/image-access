@@ -208,6 +208,9 @@ class IPLabImageAccess{
 		if(nx != parseInt(nx) || ny != parseInt(ny)){
 			throw new Error('Non-integer size provided in getNbh');
 		}
+		return new Nbh_Access(this, x_pos, y_pos, nx, ny, padding)
+		// Depracated
+		/*
         var neigh = IPLabImageAccess.MultidimArray(0, ny, nx);
         for(var y = 0; y < ny; y++){  
             for(var x = 0; x < nx; x++){
@@ -233,6 +236,7 @@ class IPLabImageAccess{
 		out.nx = nx;
 		out.ny = ny;
         return out;
+		*/
     }
     
     // calculates the minimum per color channel of two color- or graylevel pixels
@@ -591,6 +595,7 @@ class IPLabImageAccess{
 	
 	isNormalizationError(img){
 		return IPLabImageAccess.isNormalizationError(this.image, img.image);
+	}
     
 	// compares two arrays
     static arrayCompare(a1, a2, err={'msg':null}, tol=1e-5, utilObj={'mismatch':0, 'maxErr':0, 'count':0}){
@@ -799,7 +804,7 @@ class IPLabImageAccess{
 	
 	// returns the image as a formatted string that can be displayed on the console
 	visualize(decimals=3){
-		if(this.ndims(img) == 3){
+		if(this.ndims() == 3){
             throw new Error("Visualization of RGB image is not yet implemented.")
         }
 		// Determine needed length of strings
@@ -834,10 +839,113 @@ class IPLabImageAccess{
 					msg += this.getPixel(col, row).toFixed(decimals).toString(10).padStart(pre_l+decimals+1, ' ') + ' ';
 				}
 			}
-			msg += ']'
+			msg += ']';
 		}
-		msg += ']\n'
-		return msg
+		msg += ']\n';
+		return msg;
+	}
+}
+
+class Nbh_Access{
+    constructor(IPLIA_instance, xc, yc, nx, ny, padding='mirror'){
+        // IPLabImageAccess instance
+        this.IPLIA_instance = IPLIA_instance;
+		this.padding = padding;
+        // Shape
+        this.nx = nx;
+        this.ny = ny;
+        // Offset
+        this.x_offset = xc - parseInt(nx/2);
+        this.y_offset = yc - parseInt(ny/2);
+    }
+
+    getPixel(x, y){
+        // Check boundary
+        if(x < this.nx && x >= 0 && y < this.ny && y >=0){
+            // Return pixel at the offset location
+            return this.IPLIA_instance.getPixel(x + this.x_offset, y + this.y_offset, this.padding);
+        }else{
+            throw new Error('The pixel (x=' + x + ',y=' + y + ') is outside the neighborhood of size nx=' + this.nx + 
+                            ', ny=' + this.ny + '.')
+        }
+    }
+	
+	getRow(y){
+		if(y != parseInt(y)){
+			throw new Error('Non-integer index provided in getRow');
+		}
+		// Check boundary
+        if(y < this.ny && y >=0){
+			var out_arr = new Array(this.nx);
+			var y_adj = y + this.y_offset;
+			for(var x = 0; x < this.nx; x++){
+				out_arr[x] = this.IPLIA_instance.getPixel(x + this.x_offset, y_adj, this.padding);
+			}
+            return new IPLabImageAccess([out_arr]);
+        }else{
+            throw new Error('The row y=' + y + ' is outside the neighborhood of size nx=' + this.nx + 
+                            ', ny=' + this.ny + '.')
+        }
+    }
+    
+    getColumn(x, padding = 'mirror'){
+		if(x != parseInt(x)){
+			throw new Error('Non-integer index provided in getColumn');
+		}
+		// Check boundary
+        if(x < this.nx && x >=0){
+			var out_arr = new Array(this.ny);
+			var x_adj = x + this.x_offset;
+			for(var y = 0; y < this.ny; y++){
+				out_arr[y] = this.IPLIA_instance.getPixel(x_adj, y + this.y_offset, this.padding);
+			}
+            return new IPLabImageAccess([out_arr]);
+        }else{
+            throw new Error('The column x=' + x + ' is outside the neighborhood of size nx=' + this.nx + 
+                            ', ny=' + this.ny + '.')
+        }
+    }
+	
+	visualize(decimals=3){
+		if(this.IPLIA_instance.ndims() == 3){
+            throw new Error("Visualization of RGB image is not yet implemented.")
+        }
+		// Determine needed length of strings
+		var int_check = true;
+		var pre_l = 0;
+		var post_l = 0;
+		for(var row=0; row < this.ny; row++){
+			for(var col=0; col < this.nx; col++){
+				if(int_check==true && !Number.isInteger(this.IPLIA_instance.getPixel(col + this.x_offset, row + this.y_offset))){
+					int_check = false;
+				}
+				var int_val = this.getPixel(col, row).toLocaleString('fullwide', {useGrouping:false, maximumFractionDigits:20}).split('.');
+				pre_l = Math.max(pre_l, int_val[0].length);
+				if(int_val.length > 1){
+					post_l = Math.max(post_l, int_val[1].length);
+				}
+			}
+		}
+		decimals = Math.min(decimals, post_l);
+		// Construct image string
+		var msg = '[[ ';
+		for(var row=0; row < this.ny; row++){
+			if(row != 0){
+				msg += '\n [ ';
+			}
+			for(var col=0; col < this.nx; col++){
+				if(int_check==true){
+					msg += this.IPLIA_instance.getPixel(col + this.x_offset, row + this.y_offset).toString(10).padStart(pre_l, ' ') + ' ';
+				}else if(decimals==0){
+					msg += this.IPLIA_instance.getPixel(col + this.x_offset, row + this.y_offset).toFixed(0).toString(10).padStart(pre_l, ' ') + ' ';
+				}else{
+					msg += this.IPLIA_instance.getPixel(col + this.x_offset, row + this.y_offset).toFixed(decimals).toString(10).padStart(pre_l+decimals+1, ' ') + ' ';
+				}
+			}
+			msg += ']';
+		}
+		msg += ']\n';
+		return msg;
 	}
 }
 
