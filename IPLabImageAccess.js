@@ -947,6 +947,54 @@ class Nbh_Access{
 		msg += ']\n';
 		return msg;
 	}
+	
+	sort(b){
+        // if no structuring element given, use all pixels
+        if(typeof(b) == 'undefined'){
+            b = new IPLabImageAccess(IPLabImageAccess.MultidimArray(true, this.ny, this.nx));
+        }
+		// check if gray or color image is used
+        if(this.IPLIA_instance.ndims() == 2){
+            var gray = new Array();
+			// loop through every pixel
+            for(var x=0; x < this.nx; x++){
+                for(var y=0; y < this.ny; y++){
+					// check if the pixel is under the structuring element
+                    if(b.getPixel(x, y) == true || b.getPixel(x, y) == 1){
+						// if yes, add the pixel to the output array
+                        gray.push(this.getPixel(x, y));
+                    }
+                }
+            }
+			// sort the output array in ascending order
+            gray.sort((a,b) => a-b);
+			// return the sorted array
+            return new IPLabImageAccess([gray]);
+        }else{
+            var r_ = new Array();
+            var g_ = new Array();
+            var b_ = new Array();
+			// loop through every pixel
+            for(var x=0; x < this.nx; x++){
+                for(var y=0; y < this.ny; y++){
+					// check if the pixel is under the structuring element
+                    if(b.getPixel(x, y) == true || b.getPixel(x, y) == 1){
+						// if yes, add the pixel to the output array
+                        r_.push(this.getPixel(x, y)[0]);
+                        g_.push(this.getPixel(x, y)[1]);
+                        b_.push(this.getPixel(x, y)[2]);
+                    }
+                }
+            }
+			// sort the output array in ascending order
+            r_.sort((a,b) => a-b);
+            g_.sort((a,b) => a-b);
+            b_.sort((a,b) => a-b);
+			// return the sorted array
+            return [new IPLabImageAccess([r_]), new IPLabImageAccess([g_]), new IPLabImageAccess([b_])];
+        }
+    }
+	
 }
 
 
