@@ -844,6 +844,84 @@ class IPLabImageAccess{
 		msg += ']\n';
 		return msg;
 	}
+
+	// Function to display an ImageAccess object on an html canvas (for large images)
+	displayImage(scale=1, showPixels=false, id=''){
+		if(scale <= 1){
+			showPixels=false;
+		}
+		// Scale image size
+		let nx = parseInt(this.nx * scale);
+		let ny = parseInt(this.ny * scale);
+		// Create data structure to store the r, g, b, a values
+		let data = new Uint8ClampedArray(nx * ny * 4);
+		let x_acc = scale;
+		for(let x=0; x < nx; x++){
+			let y_acc = scale;
+			for(let y=0; y < ny; y++){
+				let start_idx = (y * nx + x)*4;
+				let value = this.getPixel(parseInt(x/scale), parseInt(y/scale))
+				// Draw gray lines indicating the pixels
+				if(showPixels){
+					if(x >= x_acc){
+						value = 127;
+					}
+					if(y >= y_acc){
+						value = 127;
+						y_acc += scale;
+					}
+				}
+				if(this.ndims == 3){
+					// Color pixels
+					data[start_idx] = value[0]; // r
+					data[start_idx+1] = value[1]; // g
+					data[start_idx+2] = value[2]; // b
+				}else{
+					// Gray pixels
+					data[start_idx] = value; // r
+					data[start_idx+1] = value; // g
+					data[start_idx+2] = value; // b
+				}
+				// Alpha is always 255
+				data[start_idx+3] = 255; // alpha
+			}
+			if(showPixels && x >= x_acc){
+				x_acc += scale;
+			}
+		}
+		// Create image data structure
+		let imgData = new ImageData(data, nx, ny);
+		// Create new canvas to display image
+		let canvas = document.createElement('canvas');
+		canvas.width = nx;
+		canvas.height = ny;
+		if(id != ''){
+			canvas.id = id;
+		}
+		let context = canvas.getContext('2d');
+		// Put image data into canvas
+		context.putImageData(imgData, 0, 0);
+		return canvas;
+	}
+
+	// Creates an IPLabImageAccess object from an HTMLImageElement object
+	static fromHTMLImageElement(htmlImageElement){
+		let canvas = document.createElement('canvas');
+		canvas.width = htmlImageElement.width;
+		canvas.height = htmlImageElement.height;
+		let context = canvas.getContext('2d');
+		context.drawImage(htmlImageElement, 0, 0, htmlImageElement.naturalWidth, htmlImageElement.naturalHeight);
+		let data = context.getImageData(0, 0, htmlImageElement.naturalWidth, htmlImageElement.naturalHeight).data;
+		let img = new IPLabImageAccess(htmlImageElement.height, htmlImageElement.width);
+		for(let x=0; x < htmlImageElement.width; x++){
+			for(let y=0; y < htmlImageElement.height; y++){
+				let start_idx = (y*htmlImageElement.width + x)*4;
+				let gray_value = parseInt((data[start_idx] + data[start_idx+1] + data[start_idx+2]) / 3);
+				img.setPixel(x, y, gray_value);
+			}
+		}
+		return img;
+	}
 }
 
 class Nbh_Access{
@@ -999,9 +1077,5 @@ class Nbh_Access{
 
 
 // export the class to use it in other files
+// export default IPLabImageAccess // ES6
 module.exports = IPLabImageAccess
-
-
-/* Notes and bugs
-The code is currently bug-free, unlike my appartment...
-*/ 
