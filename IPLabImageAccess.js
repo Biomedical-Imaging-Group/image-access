@@ -460,12 +460,12 @@ class IPLabImageAccess{
 			throw new Error('putRow: The provided row has length ' + new_row.ny + ' but the image has width ' + this.nx);
 		}
         // check if the correct type of pixel is provided (colour / gray)
-        if(this.ndims() == 2 && Image.ndims(new_row) == 2 && Image.shape(new_row)[1] == 3){
+        if(this.ndims() == 2 && IPLabImageAccess.ndims(new_row) == 2 && IPLabImageAccess.shape(new_row)[1] == 3){
             // otherwise provide a warning but still set the pixel
             console.warn("Writing an rgb value to a grayscale image converts this pixel to rgb.")
         }
         // check if the correct type of pixel is provided (colour / gray)
-        if(this.ndims() == 3 && Image.ndims(new_row) == 2){
+        if(this.ndims() == 3 && IPLabImageAccess.ndims(new_row) == 2){
             // otherwise provide a warning but still set the pixel
             console.warn("Writing grayscale value to an rgb image converts this pixel to grayscale.")
         }
@@ -516,12 +516,12 @@ class IPLabImageAccess{
 			throw new Error('putColumn: The provided column has length ' + new_column.ny + ' but the image has height ' + this.ny);
 		}
         // check if the correct type of pixel is provided (colour / gray)
-        if(this.ndims() == 2 && Image.ndims(new_column) == 2 && Image.shape(new_column)[1] == 3){
+        if(this.ndims() == 2 && IPLabImageAccess.ndims(new_column) == 2 && IPLabImageAccess.shape(new_column)[1] == 3){
             // otherwise provide a warning but still set the pixel
             console.warn("Writing an rgb value to a grayscale image converts this pixel to rgb.")
         }
         // check if the correct type of pixel is provided (colour / gray)
-        if(this.ndims() == 3 && Image.ndims(new_column) == 1){
+        if(this.ndims() == 3 && IPLabImageAccess.ndims(new_column) == 1){
             // otherwise provide a warning but still set the pixel
             console.warn("Writing grayscale value to an rgb image converts this pixel to grayscale.")
         }
@@ -1081,5 +1081,5 @@ class Nbh_Access{
 
 
 // export the class to use it in other files
-// export default IPLabImageAccess // ES6
-module.exports = IPLabImageAccess
+export default IPLabImageAccess // ES6
+// module.exports = IPLabImageAccess
