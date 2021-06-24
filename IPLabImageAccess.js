@@ -719,7 +719,7 @@ class IPLabImageAccess{
 			throw new Error('Non-integer index provided in putSubImage');
 		}
 		// check if the sub-image location is inside the image
-        if(x < 0 || y < 0 || x+img.nx > this.nx || x+img.ny > this.ny){
+        if(x < 0 || y < 0 || x+img.nx > this.nx || y+img.ny > this.ny){
            throw new Error("Subimage out of bounds");
         }
         // loop through every pixel of the sub-image
@@ -739,7 +739,7 @@ class IPLabImageAccess{
 			throw new Error('Non-integer index provided in putSubImage');
 		}
         // check if the sub-image location is inside the image
-        if(x < 0 || y < 0 || x+nx > this.nx || x+ny > this.ny){
+        if(x < 0 || y < 0 || x+nx > this.nx || y+ny > this.ny){
            throw new Error("Subimage out of bounds");
         }
         var output = new IPLabImageAccess(ny, nx);
@@ -926,6 +926,18 @@ class IPLabImageAccess{
 		}
 		return img;
 	}
+
+	toUint8(){
+		let out = new IPLabImageAccess(this.ny, this.nx);
+		let min = this.getMin();
+		let range = this.getMax() - min;
+		for(let x=0; x < this.nx; x++){
+		  for(let y=0; y < this.ny; y++){
+			out.image[y][x] = parseInt((this.image[y][x] - min) / range * 255);
+		  }
+		}
+		return out;
+	}
 }
 
 class Nbh_Access{
@@ -1081,5 +1093,5 @@ class Nbh_Access{
 
 
 // export the class to use it in other files
-export default IPLabImageAccess // ES6
-// module.exports = IPLabImageAccess
+// export default IPLabImageAccess // ES6
+module.exports = IPLabImageAccess
