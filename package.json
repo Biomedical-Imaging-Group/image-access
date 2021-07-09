@@ -1,0 +1,23 @@
+{
+  "name": "image-access",
+  "version": "1.0.0",
+  "description": "A class for teaching image processing programming at the pixel level.",
+  "main": "ImageAccess.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Biomedical-Imaging-Group/image-access.git"
+  },
+  "keywords": [
+    "Image",
+    "Processing"
+  ],
+  "author": "Kay Lächler",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Biomedical-Imaging-Group/image-access/issues"
+  },
+  "homepage": "https://github.com/Biomedical-Imaging-Group/image-access#readme"
+}
