@@ -2,7 +2,7 @@
 Convinient class for handling images in JavaScript.
 
 ## Overview
-The `ImageAccess` class has been developed for teaching the coding of Image Processing algorithms at the pixel level. The class is written in JavaScript and is intended to be used in [Jupyter Notebooks](https://jupyter.org/) running the [IJavascript](http://n-riesco.github.io/ijavascript/) kernel. However, it can also be used in a native JavaScript environment. The aim of the `IPLabImageAccess` class is to facilitate the creation and modification of images in JavaScript and as such it provides an easy-to-use interface to multidimensional arrays which can represent graylevel or color images, offering utility functions and pixel access, while taking care of boundary conditions.
+The `ImageAccess` class has been developed for teaching the coding of Image Processing algorithms at the pixel level. The class is written in JavaScript and is intended to be used in [Jupyter Notebooks](https://jupyter.org/) running the [IJavascript](http://n-riesco.github.io/ijavascript/) kernel. However, it can also be used in a native JavaScript environment. The aim of the `ImageAccess` class is to facilitate the creation and modification of images in JavaScript and as such it provides an easy-to-use interface to multidimensional arrays which can represent graylevel or color images, offering utility functions and pixel access, while taking care of boundary conditions.
 
 The _ImageAccess example notebook.ipynb_ showcases the basic functionalities of the `ImageAccess` class. Members of EPFL can use the following link to run the notebook on [Noto](https://www.epfl.ch/education/educational-initiatives/cede/digitaltools/noto/): https://bit.ly/2FGVRzn
 
