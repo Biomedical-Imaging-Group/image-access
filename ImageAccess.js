@@ -1,8 +1,4 @@
 class ImageAccess{
-	// define private fields
-	#min;
-	#max;
-	#change_check;
     // initializes a new blank image
     constructor(height, width = {}, {rgb=false, init_value=0} = {}, nbh=false){
 		if(nbh == false){
@@ -47,11 +43,11 @@ class ImageAccess{
 			this.nx = ImageAccess.shape(this.image)[1];
 			this.ny = ImageAccess.shape(this.image)[0];
 			// initialize min and max
-			this.#min = this.getMin(true);
-			this.#max = this.getMax(true);
-			this.#change_check = false;
+			this.min = this.getMin(true);
+			this.max = this.getMax(true);
+			this.change_check = false;
 		}else{
-			this.#change_check = true;
+			this.change_check = true;
 		}
     }
     
@@ -74,8 +70,8 @@ class ImageAccess{
         this.nx = ImageAccess.shape(this.image)[1];
         this.ny = ImageAccess.shape(this.image)[0];
 		// recalculate min and max
-		this.#min = this.getMin(true);
-		this.#max = this.getMax(true);
+		this.min = this.getMin(true);
+		this.max = this.getMax(true);
     }
     
     // returns a copy of the image
@@ -295,32 +291,32 @@ class ImageAccess{
     getMax(recalc=false){
 		if(recalc==true){
 			// apply getMax to the image
-			this.#max = ImageAccess.getMax(this.image);
-		}else if(this.#change_check==true || typeof(this.#max) == 'undefined'){
+			this.max = ImageAccess.getMax(this.image);
+		}else if(this.change_check==true || typeof(this.max) == 'undefined'){
 			// apply getMax to the image
-			this.#max = ImageAccess.getMax(this.image);
+			this.max = ImageAccess.getMax(this.image);
 			// also rerun getMin
-			this.#min = ImageAccess.getMin(this.image);
+			this.min = ImageAccess.getMin(this.image);
 			// reset change_check
-			this.#change_check = false;
+			this.change_check = false;
 		}
-		return this.#max;
+		return this.max;
     }
     
     // returns the minimum value of the image
     getMin(recalc=false){
 		if(recalc==true){
 			// apply getMin to the image
-			this.#min = ImageAccess.getMin(this.image);
-		}else if(this.#change_check==true || typeof(this.#max) == 'undefined'){
+			this.min = ImageAccess.getMin(this.image);
+		}else if(this.change_check==true || typeof(this.max) == 'undefined'){
 			// also rerun getMax
-			this.#max = ImageAccess.getMax(this.image);
+			this.max = ImageAccess.getMax(this.image);
 			// apply getMin to the image
-			this.#min = ImageAccess.getMin(this.image);
+			this.min = ImageAccess.getMin(this.image);
 			// reset change_check
-			this.#change_check = false;
+			this.change_check = false;
 		}
-		return this.#min;
+		return this.min;
 		
     }
     
@@ -393,7 +389,7 @@ class ImageAccess{
         [x,y] = ImageAccess.applyBoundaryCondition(x, y, shap, padding=padding)
         this.image[y][x] = value;
 		// reset change_check
-		this.#change_check = true;
+		this.change_check = true;
     }
     
     
@@ -491,7 +487,7 @@ class ImageAccess{
 			}
 		}
         // reset change_check
-		this.#change_check = true;
+		this.change_check = true;
     }
     
     
@@ -546,7 +542,7 @@ class ImageAccess{
 			}
 		}
 		// reset change_check
-		this.#change_check = true;
+		this.change_check = true;
     }
     
 	// returns the transpose of an array
@@ -731,7 +727,7 @@ class ImageAccess{
             }
         }
 		// reset change_check
-		this.#change_check = true;		
+		this.change_check = true;		
     }
 	
 	    getSubImage(x, y, nx, ny){
