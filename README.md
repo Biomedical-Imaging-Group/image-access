@@ -1,40 +1,41 @@
 # ImageAccess
-Convinient class for handling images in JavaScript.
+A class for the didactic implementation of image-processing algorithms in JavaScript.
 
 ## Overview
-The `ImageAccess` class has been developed for teaching the coding of Image Processing algorithms at the pixel level. The class is written in JavaScript and is intended to be used in [Jupyter Notebooks](https://jupyter.org/) running the [IJavascript](http://n-riesco.github.io/ijavascript/) kernel. However, it can also be used in a native JavaScript environment. The aim of the `ImageAccess` class is to facilitate the creation and modification of images in JavaScript and as such it provides an easy-to-use interface to multidimensional arrays which can represent graylevel or color images, offering utility functions and pixel access, while taking care of boundary conditions.
+The `ImageAccess` class has been developed to teach image-processing programming at the pixel level in engineering university courses. The class is written in JavaScript and is intended to be used in [Jupyter Notebook](https://jupyter.org/) laboratories run by the [IJavascript](http://n-riesco.github.io/ijavascript/) kernel. However, it can also be used in a native JavaScript environment. 
 
-The _ImageAccess example notebook.ipynb_ showcases the basic functionalities of the `ImageAccess` class. Members of EPFL can use the following link to run the notebook on [Noto](https://www.epfl.ch/education/educational-initiatives/cede/digitaltools/noto/): https://bit.ly/2FGVRzn
+The aim of the `ImageAccess` class is to facilitate the creation and modification of images in JavaScript. As such, it provides an easy-to-use representation of graylevel images, offering methods for pixel, neighborgood and subimage access automatically taking care of boundary conditions.
+
+The [ImageAccess example notebook.ipynb](https://nbviewer.jupyter.org/github/Biomedical-Imaging-Group/image-access/blob/master/ImageAccess%20example%20notebook.ipynb) showcases the basic functionalities of the `ImageAccess` class. Students and employees at the [École polytechnique fédérale de Lausanne (EPFL)](https://epfl.ch/en) can click [here](https://bit.ly/2FGVRzn) to run it on the EPFL's JupyterLab instance, [Noto](https://www.epfl.ch/education/educational-initiatives/cede/digitaltools/noto/). Others may click on the Binder tag for this repository above and run it there instead.
 
 ## Main Features
-* Creation of new color- or graylevel images from size and initial value parameters or from an existing JavaScript array
-* Single-pixel _R/W_ access
-* Row/Column _R/W_ access
-* Neighborhood _R_ access
-* Subimage _W_ access
-* Easy access to image size and dimensionality
-* Integrated minimum/maximum and normilize methods
-* Transpose images
-* Compare two images
-* Conversion from image to JavaScript array
+With the purpose of simplifying image-processing programming in JavaScript, the `ImageAccess` class implements, among others, the following key features
+* dedicated verbose error handling and image comparison,
+* simple read and write access to single pixels, rows, and columns, 
+* simple read access to pixel neighborhoods, supporting the simplified implementation of IP workflows using the neighborhood concept,
+* simple write access to subimages, simplifying the creation of composite images, 
+* and automatic handling of boundary conditions in all of the above.
 
 ## Usage
-To use the `ImageAccess` class, use the `require` statement. It is recommended to import the class as a constant `Image` by using the following code
+To use the `ImageAccess` class within a Jupyter Notebook, use the `require` statement. It is recommended to import the class as a variable or constant named `Image` by using the following code
 ```javascript
-const Image = require('./ImageAccess.js')
+var Image = require('./ImageAccess.js')
 ```
-but it can also be imported as `var` instead of `const` to allow for multiple importations.
 
 ## Contributors
-The class was developed in the most part by:
+The class was developed at the [EPFL's Biomedical Imaging Group](http://bigwww.epfl.ch), mainly by
+
 * Kay Lächler (kay.lachler@epfl.ch, [TheUser0571](https://github.com/TheUser0571))
 
-under the guidance, help, testing and feedback of:
-* Alejandro Noguerón Aramburu (alejandro.nogueronaramburu@epfl.ch, [Alejandro-1996](https://github.com/Alejandro-1996))
-* [Pol del Aguila Pla](https://poldap.github.io), (pol.delaguilapla@epfl.ch, [poldap](https://github.com/poldap))
-* [Daniel Sage](http://bigwww.epfl.ch/sage/index.html), (daniel.sage@epfl.ch, [dasv74](https://github.com/dasv74))
+with contributions from
 
-It was supported by EPFLs [Center for Digital Education (CEDE)](https://www.epfl.ch/education/educational-initiatives/cede/), and it belongs to the [Biomedical Imaging Group](http://bigwww.epfl.ch/).
+* Alejandro Noguerón Aramburu (alejandro.nogueronaramburu@epfl.ch, [Alejandro-1996](https://github.com/Alejandro-1996)),
+* [Pol del Aguila Pla](https://poldap.github.io), (pol.delaguilapla@epfl.ch, [poldap](https://github.com/poldap)),
+* [Daniel Sage](http://bigwww.epfl.ch/sage/index.html), (daniel.sage@epfl.ch, [dasv74](https://github.com/dasv74)).
+
+The development of this class was supported by the [Digital Resources for Instruction and Learning (DRIL) Fund](https://www.epfl.ch/education/educational-initiatives/cede/digitaltools/dril/) at EPFL, which supported the projects _IPLAB – Image Processing Laboratories on Noto_ and _FeedbackNow – Automatic grading and formative feedback for image processing laboratories_ by Pol del Aguila Pla and Daniel Sage in the sprint and fall semesters of 2020, respectively. See the video below for more information. 
+
+[![Image Processing Labs with Jupyter video on YouTube](http://img.youtube.com/vi/AF18wN37B6Q/0.jpg)](http://www.youtube.com/watch?v=AF18wN37B6Q "Image Processing Labs with Jupyter")
 
 ## Documentation
 A detailed documentation can be found in the [wiki](https://github.com/Biomedical-Imaging-Group/image-access/wiki).
