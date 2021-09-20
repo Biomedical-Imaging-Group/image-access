@@ -14,7 +14,29 @@
     "Image",
     "Processing"
   ],
-  "author": "Kay Lächler",
+  "author": {
+    "name": "Kay Lächler",
+    "email": "kay.lachler@epfl.ch",
+    "url": "https://github.com/TheUser0571"
+  },
+  "contributors": [
+    {
+      "name": "Alejandro Noguerón",
+      "email": "alejandro.nogueronaramburu@epfl.ch",
+      "url": "https://github.com/Alejandro-1996"
+    },
+    {
+      "name": "Pol del Aguila Pla",
+      "email": "pol.delaguilapla@epfl.ch",
+      "url": "https://poldap.github.io"
+    },
+    {
+      "name": "Daniel Sage",
+      "email": "daniel.sage@epfl.ch",
+      "url": "http://bigwww.epfl.ch/sage/"
+    }
+  ]
+  ,
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Biomedical-Imaging-Group/image-access/issues"

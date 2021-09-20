@@ -16,10 +16,21 @@ With the purpose of simplifying image-processing programming in JavaScript, the 
 * simple write access to subimages, simplifying the creation of composite images, 
 * and automatic handling of boundary conditions in all of the above.
 
-## Usage
-To use the `ImageAccess` class within a Jupyter Notebook, use the `require` statement. It is recommended to import the class as a variable or constant named `Image` by using the following code
+## Installation
+### npm
+The `ImageAccess` class can easily be installed from [npm](https://www.npmjs.com/) with
+```
+npm install image-access
+```
+and then be imported using
 ```javascript
-var Image = require('./ImageAccess.js')
+var ImageAccess = require('image-access')
+```
+
+### GitHub
+Alternatively, the [github repository](https://github.com/Biomedical-Imaging-Group/image-access) can be cloned and the `ImageAccess` class can be imported with
+```javascript
+var ImageAccess = require('./ImageAccess.js')
 ```
 
 ## Contributors

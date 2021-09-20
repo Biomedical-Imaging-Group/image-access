@@ -1314,5 +1314,5 @@ class Nbh_Access{
 
 
 // export the class to use it in other files
-// export default ImageAccess // ES6
-module.exports = ImageAccess
+export default ImageAccess // ES6
+// module.exports = ImageAccess
