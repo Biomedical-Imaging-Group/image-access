@@ -1,8 +1,13 @@
 {
   "name": "image-access",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "A class for teaching image processing programming at the pixel level.",
   "main": "ImageAccess.js",
+  "files": [
+    "ImageAccess.js",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -35,8 +40,7 @@
       "email": "daniel.sage@epfl.ch",
       "url": "http://bigwww.epfl.ch/sage/"
     }
-  ]
-  ,
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Biomedical-Imaging-Group/image-access/issues"
