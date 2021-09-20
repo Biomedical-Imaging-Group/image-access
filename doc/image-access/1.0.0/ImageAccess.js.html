@@ -1,4 +1,51 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>ImageAccess.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ImageAccess.html">ImageAccess</a><ul class='methods'><li data-type='method'><a href="ImageAccess.html#applyBoundaryCondition#.applyBoundaryCondition">applyBoundaryCondition</a></li><li data-type='method'><a href="ImageAccess.html#arrayCompare#.arrayCompare">arrayCompare</a></li><li data-type='method'><a href="ImageAccess.html#fromHTMLImageElement#.fromHTMLImageElement">fromHTMLImageElement</a></li><li data-type='method'><a href="ImageAccess.html#getMax#.getMax">getMax</a></li><li data-type='method'><a href="ImageAccess.html#getMin#.getMin">getMin</a></li><li data-type='method'><a href="ImageAccess.html#getNbh#.getNbh">getNbh</a></li><li data-type='method'><a href="ImageAccess.html#isNormalizationError#.isNormalizationError">isNormalizationError</a></li><li data-type='method'><a href="ImageAccess.html#min#.min">min</a></li><li data-type='method'><a href="ImageAccess.html#MultidimArray#.MultidimArray">MultidimArray</a></li><li data-type='method'><a href="ImageAccess.html#ndims#.ndims">ndims</a></li><li data-type='method'><a href="ImageAccess.html#shape#.shape">shape</a></li><li data-type='method'><a href="ImageAccess.html#transpose#.transpose">transpose</a></li><li data-type='method'><a href="ImageAccess.html#copy#copy">copy</a></li><li data-type='method'><a href="ImageAccess.html#displayImage#displayImage">displayImage</a></li><li data-type='method'><a href="ImageAccess.html#fromArray#fromArray">fromArray</a></li><li data-type='method'><a href="ImageAccess.html#getColumn#getColumn">getColumn</a></li><li data-type='method'><a href="ImageAccess.html#getMax#getMax">getMax</a></li><li data-type='method'><a href="ImageAccess.html#getMin#getMin">getMin</a></li><li data-type='method'><a href="ImageAccess.html#getNbh#getNbh">getNbh</a></li><li data-type='method'><a href="ImageAccess.html#getPixel#getPixel">getPixel</a></li><li data-type='method'><a href="ImageAccess.html#getRow#getRow">getRow</a></li><li data-type='method'><a href="ImageAccess.html#getSubImage#getSubImage">getSubImage</a></li><li data-type='method'><a href="ImageAccess.html#imageCompare#imageCompare">imageCompare</a></li><li data-type='method'><a href="ImageAccess.html#isNormalizationError#isNormalizationError">isNormalizationError</a></li><li data-type='method'><a href="ImageAccess.html#ndims#ndims">ndims</a></li><li data-type='method'><a href="ImageAccess.html#normalize#normalize">normalize</a></li><li data-type='method'><a href="ImageAccess.html#putColumn#putColumn">putColumn</a></li><li data-type='method'><a href="ImageAccess.html#putRow#putRow">putRow</a></li><li data-type='method'><a href="ImageAccess.html#putSubImage#putSubImage">putSubImage</a></li><li data-type='method'><a href="ImageAccess.html#setPixel#setPixel">setPixel</a></li><li data-type='method'><a href="ImageAccess.html#shape#shape">shape</a></li><li data-type='method'><a href="ImageAccess.html#sort#sort">sort</a></li><li data-type='method'><a href="ImageAccess.html#toArray#toArray">toArray</a></li><li data-type='method'><a href="ImageAccess.html#toUint8#toUint8">toUint8</a></li><li data-type='method'><a href="ImageAccess.html#transposeImage#transposeImage">transposeImage</a></li><li data-type='method'><a href="ImageAccess.html#visualize#visualize">visualize</a></li></ul></li><li><a href="Nbh_Access.html">Nbh_Access</a><ul class='methods'><li data-type='method'><a href="Nbh_Access.html#getColumn#getColumn">getColumn</a></li><li data-type='method'><a href="Nbh_Access.html#getPixel#getPixel">getPixel</a></li><li data-type='method'><a href="Nbh_Access.html#getRow#getRow">getRow</a></li><li data-type='method'><a href="Nbh_Access.html#sort#sort">sort</a></li><li data-type='method'><a href="Nbh_Access.html#visualize#visualize">visualize</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">ImageAccess.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * @property {Array} image - The image stored as a 2D Array
  */
 class ImageAccess{
@@ -13,15 +60,15 @@ class ImageAccess{
 	 * @param {Object} [init_dict] - Object specifying the initial values for the image
 	 * @param {Number} [init_dict.init_value=0] - The initial value to set to all pixels
 	 * @param {Boolean} [init_dict.rgb=false] - Boolean indicating if the image is rgb or not
-	 * @example <caption>Create a new image of dimensions width x height</caption>
+	 * @example &lt;caption>Create a new image of dimensions width x height&lt;/caption>
 	 * new ImageAccess(height, width);
-	 * @example <caption>Provide height and width as an array</caption>
+	 * @example &lt;caption>Provide height and width as an array&lt;/caption>
 	 * new ImageAccess([height, width]);
-	 * @example <caption>Create a new image with the same dimensions as an existing image <code>img</code></caption>
+	 * @example &lt;caption>Create a new image with the same dimensions as an existing image &lt;code>img&lt;/code>&lt;/caption>
 	 * new ImageAccess(img.shape());
-	 * @example <caption>Set the initial value to 255</caption>
+	 * @example &lt;caption>Set the initial value to 255&lt;/caption>
 	 * new Image(height, width, {init_value:255});
-	 * @example <caption>Creating an image from an existing 2D Array <code>arr</code></caption>
+	 * @example &lt;caption>Creating an image from an existing 2D Array &lt;code>arr&lt;/code>&lt;/caption>
 	 * new Image(arr);
 	 * @returns {ImageAccess}
 	 */
@@ -43,7 +90,7 @@ class ImageAccess{
 				this.image = ImageAccess.MultidimArray(init_value, height, width, 3);
 			}
 		// check if height an width are given as an array
-		}else if(ImageAccess.ndims(height) == 1 && (height.length == 2 || height.length == 3)){
+		}else if(ImageAccess.ndims(height) == 1 &amp;&amp; (height.length == 2 || height.length == 3)){
 			// in this case, the optional parameters are stored in width
 			rgb = width.rgb || false;
 			init_value = width.init_value || 0;
@@ -51,7 +98,7 @@ class ImageAccess{
 			if(height[0] != parseInt(height[0]) || height[1] != parseInt(height[1])){
 				throw new Error('Non-integer size provided in ImageAccess constructor');
 			}
-			if(rgb || (height.length == 3 && height[2] == 3)){
+			if(rgb || (height.length == 3 &amp;&amp; height[2] == 3)){
 				this.image = ImageAccess.MultidimArray(init_value, height[0], height[1], 3);
 			}else{
 				this.image = ImageAccess.MultidimArray(init_value, height[0], height[1]);
@@ -81,11 +128,11 @@ class ImageAccess{
         var im_shape = ImageAccess.shape(arr)
         var im_dims = ImageAccess.ndims(arr)
 		// check that the image is 2D or 3D
-        if(im_dims != 2 && im_dims != 3){
+        if(im_dims != 2 &amp;&amp; im_dims != 3){
             throw new Error("Please provide a 2D or 3D array.");
         }
 		// check that the color image has 3 channels
-        if(im_dims == 3 && im_shape[2] != 3){
+        if(im_dims == 3 &amp;&amp; im_shape[2] != 3){
             throw new Error("3D arrays should contain 3 color channels, not " + im_shape[2].toString() + ".")
         }
 		// copy the array into the image variable using JSON for multidimensional array copying
@@ -175,7 +222,7 @@ class ImageAccess{
 	 * @param {Integer} height - The height of the array
 	 * @param {Integer} [width] - The width of the array
 	 * @param {Integer} [depth] - The depth of the array
-	 * @returns {Array} An array of size <code>height</code> x <code>width</code> x <code>depth</code> initialized to <code>init_value</code>
+	 * @returns {Array} An array of size &lt;code>height&lt;/code> x &lt;code>width&lt;/code> x &lt;code>depth&lt;/code> initialized to &lt;code>init_value&lt;/code>
 	 */
     static MultidimArray(init_value, height, width, depth){
 		if(height == 'undefined' || init_value == 'undefined'){
@@ -184,16 +231,16 @@ class ImageAccess{
 		if(height != parseInt(height)){
 			throw new Error('Non-integer size provided in MultidimArray');
 		}
-		if(typeof(width) != 'undefined' && width != parseInt(width)){
+		if(typeof(width) != 'undefined' &amp;&amp; width != parseInt(width)){
 			throw new Error('Non-integer size provided in MultidimArray');
 		}
-		if(typeof(depth) != 'undefined' && depth != parseInt(depth)){
+		if(typeof(depth) != 'undefined' &amp;&amp; depth != parseInt(depth)){
 			throw new Error('Non-integer size provided in MultidimArray');
 		}
 		// initialize the output array with the first dimension
         var output = new Array(height);
 		// for every element of the first dimension, add the other dimensions
-        for(var i=0; i < output.length; i++){
+        for(var i=0; i &lt; output.length; i++){
             if(typeof(width) == 'undefined'){
 				// if no more dimensions, initialize the value to init_value
                 output[i] = init_value;
@@ -201,7 +248,7 @@ class ImageAccess{
 				// create the second dimension
                 output[i] = new Array(width);
 				// for every element of the second dimension add the third dimensions
-                for(var j=0; j < output[i].length; j++){
+                for(var j=0; j &lt; output[i].length; j++){
                     if(typeof(depth) == 'undefined'){
 						// if no more dimensions, initialize the value to init_value
                         output[i][j] = init_value;
@@ -209,7 +256,7 @@ class ImageAccess{
 						// create the third dimension
                         output[i][j] = new Array(depth);
 						// for every element of the third dimension initialize the value to init_value
-                        for(var k=0; k < output[i][j].length; k++){
+                        for(var k=0; k &lt; output[i][j].length; k++){
                             output[i][j][k] = init_value;
                         }
                     }
@@ -245,8 +292,8 @@ class ImageAccess{
             rgb = true;
         }
         var neigh = ImageAccess.MultidimArray(0, ny, nx);
-        for(var y = 0; y < ny; y++){  
-            for(var x = 0; x < nx; x++){
+        for(var y = 0; y &lt; ny; y++){  
+            for(var x = 0; x &lt; nx; x++){
                 // calculate x and y position offset
                 var y_offset = y_pos - Math.floor(ny/2) + y;
                 var x_offset = x_pos - Math.floor(nx/2) + x;
@@ -294,15 +341,15 @@ class ImageAccess{
     static min(a, b){
         var rgb = false;
         // check if gray or colour pixel
-        if(typeof(a.length) == 'undefined' && typeof(b.length) == 'undefined'){
+        if(typeof(a.length) == 'undefined' &amp;&amp; typeof(b.length) == 'undefined'){
             rgb = false;
-        }else if(typeof(a.length) == 'undefined' && b.length == 3){
+        }else if(typeof(a.length) == 'undefined' &amp;&amp; b.length == 3){
             rgb = true;
             a = [a, a, a];
-        }else if(a.length == 3 && typeof(b.length) == 'undefined'){
+        }else if(a.length == 3 &amp;&amp; typeof(b.length) == 'undefined'){
             rgb = true;
             b = [b, b, b];
-        }else if (a.length == 3 && b.length == 3){
+        }else if (a.length == 3 &amp;&amp; b.length == 3){
             rgb = true;
         }else{
             throw new Error("Input pixels are neither graylevel nor rgb");
@@ -397,8 +444,8 @@ class ImageAccess{
         var min = this.getMin()
         var range = this.getMax() - min
 		// loop through all pixels
-        for(var x = 0; x < this.nx; x++){
-            for(var y = 0; y < this.ny; y++){
+        for(var x = 0; x &lt; this.nx; x++){
+            for(var y = 0; y &lt; this.ny; y++){
                 var val = this.getPixel(x, y)
 				// normalize pixel (range = [0,1])
                 val = (val - min)/range
@@ -443,17 +490,17 @@ class ImageAccess{
 			throw new Error('Non-integer index provided in setPixel');
 		}
         // check if the correct type of pixel is provided (colour / gray)
-        if(this.ndims() == 2 && typeof(value.length) != 'undefined'){
+        if(this.ndims() == 2 &amp;&amp; typeof(value.length) != 'undefined'){
             // otherwise provide a warning but still set the pixel
             console.warn("Writing an rgb value to a grayscale image converts this pixel to rgb.")
         }
         // check if the correct type of pixel is provided (colour / gray)
-        if(this.ndims() == 3 && value.length != 3){
+        if(this.ndims() == 3 &amp;&amp; value.length != 3){
             // otherwise provide a warning but still set the pixel
             console.warn("Writing grayscale value to an rgb image converts this pixel to grayscale.")
         }
 		// check for paddings
-		if(padding != 'mirror' && padding != 'repeat'){
+		if(padding != 'mirror' &amp;&amp; padding != 'repeat'){
 			throw new Error('setPixel does not support ' + padding + '-padding! Use mirror or repeat.');
 		}
         // store original coordinate for message display
@@ -542,7 +589,7 @@ class ImageAccess{
 			throw new Error('Non-integer index provided in putRow');
 		}
 		// check that a 1D image object has been provided
-		if(new_row.nx != 1 && new_row.ny != 1){
+		if(new_row.nx != 1 &amp;&amp; new_row.ny != 1){
 			throw new Error('putRow: Provide a 1D image object that contains either a single row or a single column for new_row.')
 		}
 		// check if a column has been provided
@@ -550,23 +597,23 @@ class ImageAccess{
 			is_row = false;
 		}
 		// check if the row has the correct length
-		if(is_row == true && new_row.nx != this.nx){
+		if(is_row == true &amp;&amp; new_row.nx != this.nx){
 			throw new Error('putRow: The provided row has length ' + new_row.nx + ' but the image has width ' + this.nx);
-		}else if(is_row == false && new_row.ny != this.nx){
+		}else if(is_row == false &amp;&amp; new_row.ny != this.nx){
 			throw new Error('putRow: The provided row has length ' + new_row.ny + ' but the image has width ' + this.nx);
 		}
         // check if the correct type of pixel is provided (colour / gray)
-        if(this.ndims() == 2 && ImageAccess.ndims(new_row) == 2 && ImageAccess.shape(new_row)[1] == 3){
+        if(this.ndims() == 2 &amp;&amp; ImageAccess.ndims(new_row) == 2 &amp;&amp; ImageAccess.shape(new_row)[1] == 3){
             // otherwise provide a warning but still set the pixel
             console.warn("Writing an rgb value to a grayscale image converts this pixel to rgb.")
         }
         // check if the correct type of pixel is provided (colour / gray)
-        if(this.ndims() == 3 && ImageAccess.ndims(new_row) == 2){
+        if(this.ndims() == 3 &amp;&amp; ImageAccess.ndims(new_row) == 2){
             // otherwise provide a warning but still set the pixel
             console.warn("Writing grayscale value to an rgb image converts this pixel to grayscale.")
         }
 		// check for paddings
-		if(padding != 'mirror' && padding != 'repeat'){
+		if(padding != 'mirror' &amp;&amp; padding != 'repeat'){
 			throw new Error('putRow does not support ' + padding + '-padding! Use mirror or repeat.');
 		}
         // variable to check if an out of bounds pixel has been accessed
@@ -582,7 +629,7 @@ class ImageAccess{
 		if(is_row == true){
 			this.image[y] = new_row.image[0];
 		}else{
-			for(var x=0; x < this.nx; x++){
+			for(var x=0; x &lt; this.nx; x++){
 				this.image[y][x] = new_row.image[x][0];
 			}
 		}
@@ -603,7 +650,7 @@ class ImageAccess{
 			throw new Error('Non-integer index provided in putColumn');
 		}
 		// check that a 1D image object has been provided
-		if(new_column.nx != 1 && new_column.ny != 1){
+		if(new_column.nx != 1 &amp;&amp; new_column.ny != 1){
 			throw new Error('putColumn: Provide a 1D image object that contains either a single row or a single column for new_column.')
 		}
 		// check if a column has been provided
@@ -611,18 +658,18 @@ class ImageAccess{
 			is_row = false;
 		}
         // check if the column has the correct length
-		if(is_row == true && new_column.nx != this.ny){
+		if(is_row == true &amp;&amp; new_column.nx != this.ny){
 			throw new Error('putColumn: The provided column has length ' + new_column.nx + ' but the image has height ' + this.ny);
-		}else if(is_row == false && new_column.ny != this.ny){
+		}else if(is_row == false &amp;&amp; new_column.ny != this.ny){
 			throw new Error('putColumn: The provided column has length ' + new_column.ny + ' but the image has height ' + this.ny);
 		}
         // check if the correct type of pixel is provided (colour / gray)
-        if(this.ndims() == 2 && ImageAccess.ndims(new_column) == 2 && ImageAccess.shape(new_column)[1] == 3){
+        if(this.ndims() == 2 &amp;&amp; ImageAccess.ndims(new_column) == 2 &amp;&amp; ImageAccess.shape(new_column)[1] == 3){
             // otherwise provide a warning but still set the pixel
             console.warn("Writing an rgb value to a grayscale image converts this pixel to rgb.")
         }
         // check if the correct type of pixel is provided (colour / gray)
-        if(this.ndims() == 3 && ImageAccess.ndims(new_column) == 1){
+        if(this.ndims() == 3 &amp;&amp; ImageAccess.ndims(new_column) == 1){
             // otherwise provide a warning but still set the pixel
             console.warn("Writing grayscale value to an rgb image converts this pixel to grayscale.")
         }
@@ -638,11 +685,11 @@ class ImageAccess{
 		
 		// put new column
 		if(is_row == true){
-			for(var y=0; y < this.ny; y++){
+			for(var y=0; y &lt; this.ny; y++){
 				this.image[y][x] = new_column.image[0][y];
 			}
 		}else{
-			for(var y=0; y < this.ny; y++){
+			for(var y=0; y &lt; this.ny; y++){
 				this.image[y][x] = new_column.image[y][0];
 			}
 		}
@@ -679,7 +726,7 @@ class ImageAccess{
 	 * @param {Object} [c]
 	 * @param {Number} [c.c=null] - The proportionality constant to check for. If not given it is calculated from the first pixel
 	 * @param {Number} [tol=1e-3] - The tolerance used for the comparison
-	 * @returns {Boolean} <code>true</code> if it is a normalization error, <code>false</code> if not
+	 * @returns {Boolean} &lt;code>true&lt;/code> if it is a normalization error, &lt;code>false&lt;/code> if not
 	 */
 	static isNormalizationError(img1, img2, c={'c':null}, tol=1e-3){
 		// check if the array have the same size
@@ -688,14 +735,14 @@ class ImageAccess{
 		}
 		for(var i in img1){
 		    // Don't forget to check for arrays in our arrays.
-			if(img1[i] instanceof Array && img2[i] instanceof Array) {
+			if(img1[i] instanceof Array &amp;&amp; img2[i] instanceof Array) {
 				if(!ImageAccess.isNormalizationError(img1[i], img2[i], c)){
 					return false;
 				}
 			}
 			else{
 				// Initialize proportionality constant
-				if(c.c == null && img1[i] != 0 && img2[i] != 0){
+				if(c.c == null &amp;&amp; img1[i] != 0 &amp;&amp; img2[i] != 0){
 					   c.c = img1[i] / img2[i];
 				}
 				// If only one is 0, not proportional
@@ -716,7 +763,7 @@ class ImageAccess{
 	/**
 	 * Checks if there is a normalization error between this image and another image. A normalization error means that one array is a scalar multiple of the other.
 	 * @param {ImageAccess} img - The other image to compare
-	 * @returns {Boolean} <code>true</code> if it is a normalization error, <code>false</code> if not
+	 * @returns {Boolean} &lt;code>true&lt;/code> if it is a normalization error, &lt;code>false&lt;/code> if not
 	 */
 	isNormalizationError(img){
 		return ImageAccess.isNormalizationError(this.image, img.image);
@@ -733,11 +780,11 @@ class ImageAccess{
 	 * @param {Number} [utilObj.mismatch=0] - The mismatch ratio
 	 * @param {Number} [utilObj.maxErr=0] - The maximum error between the two Arrays
 	 * @param {Number} [utilObj.count=0] - The number of mismatched elements
-	 * @returns {Boolean} <code>true</code> if the two Arrays are equal within the tolerance, <code>false</code> if not
+	 * @returns {Boolean} &lt;code>true&lt;/code> if the two Arrays are equal within the tolerance, &lt;code>false&lt;/code> if not
 	 */
     static arrayCompare(a1, a2, err={'msg':null}, tol=1e-5, utilObj={'mismatch':0, 'maxErr':0, 'count':0}){
 		// check if only tolerance has been provided
-		if(typeof err !== 'object' && err !== null){
+		if(typeof err !== 'object' &amp;&amp; err !== null){
 			tol = err;
 			err = {'msg':null};
 		}
@@ -751,7 +798,7 @@ class ImageAccess{
 		let c = {'c':null}
 		for(let i in a1){
 		    // Don't forget to check for arrays in our arrays.
-			if(a1[i] instanceof Array && a2[i] instanceof Array){
+			if(a1[i] instanceof Array &amp;&amp; a2[i] instanceof Array){
 				if(!ImageAccess.arrayCompare(a1[i], a2[i], err, tol, utilObj)){
 					check_err = true;
 					if(!ImageAccess.isNormalizationError(a1[i], a2[i], c)){
@@ -793,7 +840,7 @@ class ImageAccess{
 	 * @param {Object} [err] - Object containing the error message
 	 * @param {Boolean} [err.msg=null] - The error message, specifying the type of error and more info
 	 * @param {Number} [tol=1e-5] - The tolerance used for the comparison
-	 * @returns {Boolean} <code>true</code> if the two images are equal within the tolerance, <code>false</code> if not
+	 * @returns {Boolean} &lt;code>true&lt;/code> if the two images are equal within the tolerance, &lt;code>false&lt;/code> if not
 	 */
     imageCompare(newImage, err={'msg':null}, tol=1e-5){
 		// apply arrayCompare to the two images
@@ -814,8 +861,8 @@ class ImageAccess{
         if(ImageAccess.ndims(this.image) == 2){
             var gray = new Array();
 			// loop through every pixel
-            for(var x=0; x < this.nx; x++){
-                for(var y=0; y < this.ny; y++){
+            for(var x=0; x &lt; this.nx; x++){
+                for(var y=0; y &lt; this.ny; y++){
 					// check if the pixel is under the structuring element
                     if(b.getPixel(x, y) > 0){
 						// if yes, add the pixel to the output array
@@ -832,8 +879,8 @@ class ImageAccess{
             var g_ = new Array();
             var b_ = new Array();
 			// loop through every pixel
-            for(var x=0; x < this.nx; x++){
-                for(var y=0; y < this.ny; y++){
+            for(var x=0; x &lt; this.nx; x++){
+                for(var y=0; y &lt; this.ny; y++){
 					// check if the pixel is under the structuring element
                     if(b.getPixel(x, y) > 0){
 						// if yes, add the pixel to the output array
@@ -871,12 +918,12 @@ class ImageAccess{
 			throw new Error('Non-integer index provided in putSubImage');
 		}
 		// check if the sub-image location is inside the image
-        if(x < 0 || y < 0 || x+img.nx > this.nx || y+img.ny > this.ny){
+        if(x &lt; 0 || y &lt; 0 || x+img.nx > this.nx || y+img.ny > this.ny){
            throw new Error("Subimage out of bounds");
         }
         // loop through every pixel of the sub-image
-        for(var k = x; k < x+img.nx; k++){
-            for(var l = y; l < y+img.ny; l++){
+        for(var k = x; k &lt; x+img.nx; k++){
+            for(var l = y; l &lt; y+img.ny; l++){
 				// put the pixel of the subimage into the image
                 var value = img.getPixel(k-x, l-y)
                 this.setPixel(k, l, value)
@@ -899,13 +946,13 @@ class ImageAccess{
 			throw new Error('Non-integer index provided in putSubImage');
 		}
         // check if the sub-image location is inside the image
-        if(x < 0 || y < 0 || x+nx > this.nx || y+ny > this.ny){
+        if(x &lt; 0 || y &lt; 0 || x+nx > this.nx || y+ny > this.ny){
            throw new Error("Subimage out of bounds");
         }
         var output = new ImageAccess(ny, nx);
         
-        for(var k = x; k < x+nx; k++){
-            for(var l = y; l < y+ny; l++){
+        for(var k = x; k &lt; x+nx; k++){
+            for(var l = y; l &lt; y+ny; l++){
 				// put the pixel of the subimage into the image
                 var value = this.getPixel(k, l)
                 output.setPixel(k - x, l - y, value)
@@ -919,13 +966,13 @@ class ImageAccess{
 	 * Adjusts index values based on the shape and specified boudary conditions
 	 * @param {Integer} x - The x index
 	 * @param {Integer} y - The y index
-	 * @param {Array} shap - The shape (size) of the image (<code>[ny, nx]</code>)
+	 * @param {Array} shap - The shape (size) of the image (&lt;code>[ny, nx]&lt;/code>)
 	 * @param {String} [padding='mirror'] - The boundary condition to apply ('mirror', 'repeat' or 'zero') 
-	 * @returns {Array} The modified indices as an array (<code>[x, y]</code>)
+	 * @returns {Array} The modified indices as an array (&lt;code>[x, y]&lt;/code>)
 	 */
 	static applyBoundaryCondition(x, y, shap, padding='mirror'){
 		// padding
-		if(y < 0){
+		if(y &lt; 0){
 			// apply zero padding
 			if(padding == 'zero'){
 				y = -1;
@@ -948,7 +995,7 @@ class ImageAccess{
 				y = shap[0] - 1 - (y % shap[0]);
 			}
 		}
-		if(x < 0){
+		if(x &lt; 0){
 			if(padding == 'zero'){
 				// apply zero padding
 				x = -1;
@@ -987,9 +1034,9 @@ class ImageAccess{
 		var int_check = true;
 		var pre_l = 0;
 		var post_l = 0;
-		for(var row=0; row < this.ny; row++){
-			for(var col=0; col < this.nx; col++){
-				if(int_check==true && !Number.isInteger(this.getPixel(col, row))){
+		for(var row=0; row &lt; this.ny; row++){
+			for(var col=0; col &lt; this.nx; col++){
+				if(int_check==true &amp;&amp; !Number.isInteger(this.getPixel(col, row))){
 					int_check = false;
 				}
 				var int_val = this.getPixel(col, row).toLocaleString('fullwide', {useGrouping:false, maximumFractionDigits:20}).split('.');
@@ -1002,11 +1049,11 @@ class ImageAccess{
 		decimals = Math.min(decimals, post_l);
 		// Construct image string
 		var msg = '[[ ';
-		for(var row=0; row < this.ny; row++){
+		for(var row=0; row &lt; this.ny; row++){
 			if(row != 0){
 				msg += '\n [ ';
 			}
-			for(var col=0; col < this.nx; col++){
+			for(var col=0; col &lt; this.nx; col++){
 				if(int_check==true){
 					msg += this.getPixel(col, row).toString(10).padStart(pre_l, ' ') + ' ';
 				}else if(decimals==0){
@@ -1029,7 +1076,7 @@ class ImageAccess{
 	 * @returns {HTMLCanvasElement} - The html canvas containing the image
 	 */
 	displayImage(scale=1, showPixels=false, id=''){
-		if(scale <= 1){
+		if(scale &lt;= 1){
 			showPixels=false;
 		}
 		// Scale image size
@@ -1038,9 +1085,9 @@ class ImageAccess{
 		// Create data structure to store the r, g, b, a values
 		let data = new Uint8ClampedArray(nx * ny * 4);
 		let x_acc = scale;
-		for(let x=0; x < nx; x++){
+		for(let x=0; x &lt; nx; x++){
 			let y_acc = scale;
-			for(let y=0; y < ny; y++){
+			for(let y=0; y &lt; ny; y++){
 				let start_idx = (y * nx + x)*4;
 				let value = this.getPixel(parseInt(x/scale), parseInt(y/scale))
 				// Draw gray lines indicating the pixels
@@ -1067,7 +1114,7 @@ class ImageAccess{
 				// Alpha is always 255
 				data[start_idx+3] = 255; // alpha
 			}
-			if(showPixels && x >= x_acc){
+			if(showPixels &amp;&amp; x >= x_acc){
 				x_acc += scale;
 			}
 		}
@@ -1099,8 +1146,8 @@ class ImageAccess{
 		context.drawImage(htmlImageElement, 0, 0, htmlImageElement.naturalWidth, htmlImageElement.naturalHeight);
 		let data = context.getImageData(0, 0, htmlImageElement.naturalWidth, htmlImageElement.naturalHeight).data;
 		let img = new ImageAccess(htmlImageElement.height, htmlImageElement.width);
-		for(let x=0; x < htmlImageElement.width; x++){
-			for(let y=0; y < htmlImageElement.height; y++){
+		for(let x=0; x &lt; htmlImageElement.width; x++){
+			for(let y=0; y &lt; htmlImageElement.height; y++){
 				let start_idx = (y*htmlImageElement.width + x)*4;
 				let gray_value = parseInt((data[start_idx] + data[start_idx+1] + data[start_idx+2]) / 3);
 				img.setPixel(x, y, gray_value);
@@ -1117,8 +1164,8 @@ class ImageAccess{
 		let out = new ImageAccess(this.ny, this.nx);
 		let min = this.getMin();
 		let range = this.getMax() - min;
-		for(let x=0; x < this.nx; x++){
-		  for(let y=0; y < this.ny; y++){
+		for(let x=0; x &lt; this.nx; x++){
+		  for(let y=0; y &lt; this.ny; y++){
 			out.image[y][x] = parseInt((this.image[y][x] - min) / range * 255);
 		  }
 		}
@@ -1156,7 +1203,7 @@ class Nbh_Access{
 	 */
     getPixel(x, y){
         // Check boundary
-        if(x < this.nx && x >= 0 && y < this.ny && y >=0){
+        if(x &lt; this.nx &amp;&amp; x >= 0 &amp;&amp; y &lt; this.ny &amp;&amp; y >=0){
             // Return pixel at the offset location
             return this.IA_instance.getPixel(x + this.x_offset, y + this.y_offset, this.padding);
         }else{
@@ -1175,10 +1222,10 @@ class Nbh_Access{
 			throw new Error('Non-integer index provided in getRow');
 		}
 		// Check boundary
-        if(y < this.ny && y >=0){
+        if(y &lt; this.ny &amp;&amp; y >=0){
 			var out_arr = new Array(this.nx);
 			var y_adj = y + this.y_offset;
-			for(var x = 0; x < this.nx; x++){
+			for(var x = 0; x &lt; this.nx; x++){
 				out_arr[x] = this.IA_instance.getPixel(x + this.x_offset, y_adj, this.padding);
 			}
             return new ImageAccess([out_arr]);
@@ -1198,10 +1245,10 @@ class Nbh_Access{
 			throw new Error('Non-integer index provided in getColumn');
 		}
 		// Check boundary
-        if(x < this.nx && x >=0){
+        if(x &lt; this.nx &amp;&amp; x >=0){
 			var out_arr = new Array(this.ny);
 			var x_adj = x + this.x_offset;
-			for(var y = 0; y < this.ny; y++){
+			for(var y = 0; y &lt; this.ny; y++){
 				out_arr[y] = this.IA_instance.getPixel(x_adj, y + this.y_offset, this.padding);
 			}
             return new ImageAccess([out_arr]);
@@ -1224,9 +1271,9 @@ class Nbh_Access{
 		var int_check = true;
 		var pre_l = 0;
 		var post_l = 0;
-		for(var row=0; row < this.ny; row++){
-			for(var col=0; col < this.nx; col++){
-				if(int_check==true && !Number.isInteger(this.IA_instance.getPixel(col + this.x_offset, row + this.y_offset))){
+		for(var row=0; row &lt; this.ny; row++){
+			for(var col=0; col &lt; this.nx; col++){
+				if(int_check==true &amp;&amp; !Number.isInteger(this.IA_instance.getPixel(col + this.x_offset, row + this.y_offset))){
 					int_check = false;
 				}
 				var int_val = this.getPixel(col, row).toLocaleString('fullwide', {useGrouping:false, maximumFractionDigits:20}).split('.');
@@ -1239,11 +1286,11 @@ class Nbh_Access{
 		decimals = Math.min(decimals, post_l);
 		// Construct image string
 		var msg = '[[ ';
-		for(var row=0; row < this.ny; row++){
+		for(var row=0; row &lt; this.ny; row++){
 			if(row != 0){
 				msg += '\n [ ';
 			}
-			for(var col=0; col < this.nx; col++){
+			for(var col=0; col &lt; this.nx; col++){
 				if(int_check==true){
 					msg += this.IA_instance.getPixel(col + this.x_offset, row + this.y_offset).toString(10).padStart(pre_l, ' ') + ' ';
 				}else if(decimals==0){
@@ -1272,8 +1319,8 @@ class Nbh_Access{
         if(this.IA_instance.ndims() == 2){
             var gray = new Array();
 			// loop through every pixel
-            for(var x=0; x < this.nx; x++){
-                for(var y=0; y < this.ny; y++){
+            for(var x=0; x &lt; this.nx; x++){
+                for(var y=0; y &lt; this.ny; y++){
 					// check if the pixel is under the structuring element
                     if(b.getPixel(x, y) > 0){
 						// if yes, add the pixel to the output array
@@ -1290,8 +1337,8 @@ class Nbh_Access{
             var g_ = new Array();
             var b_ = new Array();
 			// loop through every pixel
-            for(var x=0; x < this.nx; x++){
-                for(var y=0; y < this.ny; y++){
+            for(var x=0; x &lt; this.nx; x++){
+                for(var y=0; y &lt; this.ny; y++){
 					// check if the pixel is under the structuring element
                     if(b.getPixel(x, y) > 0){
 						// if yes, add the pixel to the output array
@@ -1316,3 +1363,28 @@ class Nbh_Access{
 // export the class to use it in other files
 // export default ImageAccess // ES6
 module.exports = ImageAccess
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Mon Sep 20 2021 18:08:10 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
