@@ -1,6 +1,6 @@
 {
   "name": "image-access",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A class for teaching image processing programming at the pixel level.",
   "main": "ImageAccess.js",
   "files": [
