@@ -49,4 +49,4 @@ The development of this class was supported by the [Digital Resources for Instru
 [![Image Processing Labs with Jupyter video on YouTube](http://img.youtube.com/vi/AF18wN37B6Q/0.jpg)](http://www.youtube.com/watch?v=AF18wN37B6Q "Image Processing Labs with Jupyter")
 
 ## Documentation
-A detailed documentation can be found in the [wiki](https://github.com/Biomedical-Imaging-Group/image-access/wiki).
+A detailed documentation can be found [here](https://biomedical-imaging-group.github.io/image-access/).
